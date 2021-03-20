@@ -1,9 +1,9 @@
 import pygame
 
 #class for tiles
-pit = pygame.image.load('pit.png')
-floor = pygame.image.load('floor.png')
-wall = pygame.image.load('wall.png')
+pit = pygame.image.load('../images/pit.png')
+floor = pygame.image.load('../images/floor.png')
+wall = pygame.image.load('../images/wall.png')
 tileset = [pit,floor,wall]
 nameset = ["pit","floor","wall"]
 

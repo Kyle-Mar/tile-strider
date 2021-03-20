@@ -1,8 +1,8 @@
 import pygame
 
 #class for objects that sit on top of tiles like the player and crates
-player = pygame.image.load('player.png')
-crate = pygame.image.load('crate.png')
+player = pygame.image.load('../images/player.png')
+crate = pygame.image.load('../images/crate.png')
 objectset = [player,crate]
 nameset = ["player","crate"]
 
