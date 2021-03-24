@@ -64,5 +64,5 @@ class Player(Object):
 
 class Crate(Object):
     def __init__(self, x, y):
-        #creates a crate subclass
+        #creates a crate subclass (includes red/blue crates)
         super().__init__(x, y)
