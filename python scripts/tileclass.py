@@ -13,24 +13,10 @@ class Tile(object):
         # creates a tile (variant is what type of tile it is, see the tileset list for info)
         self.x = x
         self.y = y
-        self.variant = tileset[variant]
+        self.surface = tileset[variant]
         self.name = nameset[variant]
-
-    def x(self):
-        # returns the tile's x position
-        return self.x
-
-    def y(self):
-        # returns the tile's y position
-        return self.y
-
-    def variant(self):
-        # returns the tile's surface for blitting
-        return self.variant
-
-    def is_floor(self):
-        # returns true if the tile can have objects on top of it, returns false otherwise
+        self.is_floor = ""
         if self.name == "pit" or self.name == "wall":
-            return False
+            self.is_floor = False
         else:
-            return True
+            self.is_floor = True
