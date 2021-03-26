@@ -1,22 +1,24 @@
 import pygame
-import levelclass
+import levels
+import settings
 
 # initialize pygame window
 
 pygame.init()
-screen = pygame.display.set_mode([600, 600])
-background = pygame.Surface((600, 600))
+x = settings.resolution_x
+y = settings.resolution_y
+screen = pygame.display.set_mode([x, y])
+background = pygame.Surface((x, y))
 background.fill((0, 0, 0))
 background.convert()
 
 # create clock
 
 clock = pygame.time.Clock()
-FPS = 30
+FPS = settings.fps
 
 # temporary. ideally here, we create a level manager
-current_level = levelclass.Level(5, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                                [[1, 3, 0], [3, 4, 1], [3, 3, 1]])
+current_level = levels.level50
 
 # create game loop
 
@@ -25,6 +27,20 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        # note: these "code snippets" aren't really code, but rather what these blocks should end up doing in general
+
+        # if current_level == none:
+        #  display main menu
+        # else:
+        # load level
+
+        # music stuff is going to go here
+        # if current level == levels.levelX (where X is a level):
+        #   play level song
+        # else:
+        #   play menu theme
+
 
         # move player
 
@@ -37,6 +53,12 @@ while running:
                 current_level.detection("left", 0 - current_level.tile_size, 0)
             if event.key == pygame.K_RIGHT:
                 current_level.detection("right", current_level.tile_size, 0)
+            if event.key == pygame.K_ESCAPE:
+                running = False
+            if event.key == pygame.K_1:
+                current_level = levels.level51
+            elif event.key == pygame.K_2:
+                current_level = levels.level50
 
         # draw new screen
 
