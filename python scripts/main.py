@@ -1,11 +1,14 @@
 import pygame
 import levelclass
+import math
 
 # initialize pygame window
 
 pygame.init()
-screen = pygame.display.set_mode([600, 600])
-background = pygame.Surface((600, 600))
+screen_size = [1280, 720]
+screen_offset = [(screen_size[0] - 500) / 2, (screen_size[1] - 500) / 2]
+screen = pygame.display.set_mode(screen_size)
+background = pygame.Surface(screen_size)
 background.fill((0, 0, 0))
 background.convert()
 
@@ -15,8 +18,10 @@ clock = pygame.time.Clock()
 FPS = 30
 
 # temporary. ideally here, we create a level manager
-current_level = levelclass.Level(5, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                                [[1, 3, 0], [3, 4, 1], [3, 3, 1]])
+#current_level = levelclass.Level(5, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+#                                [[1, 3, 0], [3, 4, 1], [3, 3, 1]], screen_offset)
+current_level = levelclass.Level(7, [2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 0, 0, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+                                [[2, 4, 0], [4, 5, 1], [4, 4, 1]], screen_offset)
 
 # create game loop
 
@@ -30,13 +35,13 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                current_level.detection("up", 0, 0 - current_level.tile_size)
+                current_level.detection("up", 0, 0 - current_level.tile_size, screen_size)
             if event.key == pygame.K_DOWN:
-                current_level.detection("down", 0, current_level.tile_size)
+                current_level.detection("down", 0, current_level.tile_size, screen_size)
             if event.key == pygame.K_LEFT:
-                current_level.detection("left", 0 - current_level.tile_size, 0)
+                current_level.detection("left", 0 - current_level.tile_size, 0, screen_size)
             if event.key == pygame.K_RIGHT:
-                current_level.detection("right", current_level.tile_size, 0)
+                current_level.detection("right", current_level.tile_size, 0, screen_size)
 
         # draw new screen
 
@@ -46,12 +51,12 @@ while running:
 
         for i in range(len(current_level.tiles)):
             screen.blit(pygame.transform.scale(current_level.tiles[i].surface,
-                                              (round(current_level.tile_size), round(current_level.tile_size))),
-                       (current_level.tiles[i].x, current_level.tiles[i].y))
+                                              (math.ceil(current_level.tile_size), math.ceil(current_level.tile_size))),
+                       (round(current_level.tiles[i].x), round(current_level.tiles[i].y)))
         for i in range(len(current_level.objects)):
             screen.blit(pygame.transform.scale(current_level.objects[i].surface,
-                                              (round(current_level.tile_size), round(current_level.tile_size))),
-                       (current_level.objects[i].x, current_level.objects[i].y))
+                                              (math.ceil(current_level.tile_size), math.ceil(current_level.tile_size))),
+                       (round(current_level.objects[i].x), round(current_level.objects[i].y)))
 
         clock.tick(FPS)
         pygame.display.flip()
