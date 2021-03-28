@@ -8,9 +8,7 @@ pygame.init()
 x = settings.resolution_x
 y = settings.resolution_y
 screen = pygame.display.set_mode([x, y])
-background = pygame.Surface((x, y))
-background.fill((0, 0, 0))
-background.convert()
+
 
 # create clock
 
@@ -27,6 +25,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        background = pygame.Surface((x, y))
+        background.fill((current_level.bg()))
+        background.convert()
 
         # note: these "code snippets" aren't really code, but rather what these blocks should end up doing in general
 
@@ -59,6 +60,16 @@ while running:
                 current_level = levels.level51
             elif event.key == pygame.K_2:
                 current_level = levels.level50
+            elif event.key == pygame.K_3:
+                current_level = levels.level52
+            elif event.key == pygame.K_4:
+                current_level = levels.menu1
+            elif event.key == pygame.K_5:
+                current_level = levels.menu2
+            elif event.key == pygame.K_6:
+                current_level = levels.menu3
+            elif event.key == pygame.K_7:
+                current_level = levels.menu4
 
         # draw new screen
 

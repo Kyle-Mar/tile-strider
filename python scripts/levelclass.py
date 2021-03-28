@@ -1,10 +1,9 @@
 import objectclass
 import tileclass
-import settings
 
 
 class Level(object):
-    def __init__(self, size, tiles, objects):
+    def __init__(self, size, tiles, objects, background):
         """
         :param size: a grid of A x A tiles that define the level. int.
         :param tiles: the tiles that comprise the level. Array, ints.
@@ -15,8 +14,11 @@ class Level(object):
         self.tiles = []
         self.objects = []
         self.tile_size = 500 / size
-        center_x = ((settings.resolution_x / 2) / size) + (round(self.tile_size) * (round(size) / 2)) + (round(self.tile_size / size))
-        center_y = ((settings.resolution_y / 2) / size) + (round(self.tile_size) / (round(size) / 2)) + (round(self.tile_size / size))
+        self.background = background
+        # center_x = ((settings.resolution_x / 2) / size) + (round(self.tile_size) * (round(size) / 2)) + (round(self.tile_size / size))
+        # center_y = ((settings.resolution_y / 2) / size) + (round(self.tile_size) / (round(size) / 2)) + (round(self.tile_size / size))
+        center_x = 50
+        center_y = 50
 
         # creates the grid and the lists containing the tiles and objects
 
@@ -29,5 +31,11 @@ class Level(object):
                                                    round((item[1] - 1) * self.tile_size) + center_y, item[2]))
 
     def detection(self, direction, x_change, y_change):
-        #triggers the player movement
+        # triggers the player movement
         self.objects[0].movement(self.objects, 0, direction, x_change, y_change, self.tiles, self.tile_size, self.size)
+
+    def bg(self):
+        # customizable per level background
+        return self.background
+
+

@@ -10,8 +10,10 @@ lever = pygame.image.load('../images/switch.png')
 button = pygame.image.load('../images/button.png')
 arrow = pygame.image.load('../images/right1.png')
 rotator = pygame.image.load('../images/tile_clockwise.png')
-tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn]
-nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn"]
+void = pygame.image.load('../images/void.png')
+
+tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn, void]
+nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn", "void"]
 
 
 class Tile(object):
@@ -22,7 +24,7 @@ class Tile(object):
         self.surface = tileset[variant]
         self.name = nameset[variant]
         self.is_floor = ""
-        if self.name == "pit" or self.name == "wall":
+        if self.name == "pit" or self.name == "wall" or self.name == "void":
             self.is_floor = False
         else:
             self.is_floor = True
@@ -44,6 +46,8 @@ class Tile(object):
             self.__class__ = Goal
         if variant == 8:
             self.__class__ = Spawn
+        if variant == 9:
+            self.__class__ = Void
 
 
 class Pit(Tile):
@@ -97,4 +101,10 @@ class Arrow(Tile):
 class Spawn(Tile):
     def __init__(self):
         # creates a designated spawn tile
+        super().__init__()
+
+
+class Void(Tile):
+    def __init__(self):
+        # creates a void so that more unique shapes other than a square can be made
         super().__init__()

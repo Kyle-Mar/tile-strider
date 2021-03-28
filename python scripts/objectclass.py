@@ -43,8 +43,9 @@ class Object(object):
             if object_list.index(item) == object_index and condition:
                 for item2 in object_list:
                     if item2.name == "crate" and item.x + x_change == item2.x and item.y + y_change == item2.y:
-                        if object_list[object_list.index(item2)].movement(object_list, object_list.index(item2), direction, x_change, y_change, tile_list,
-                                     tile_size, grid_size):
+                        if object_list[object_list.index(item2)].movement(object_list, object_list.index(item2),
+                                                                          direction, x_change, y_change, tile_list,
+                                                                          tile_size, grid_size):
                             item.new_coords(item.x + x_change, item.y + y_change)
                             if item.name == "crate":
                                 return True
