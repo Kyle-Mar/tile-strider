@@ -1,16 +1,22 @@
-import objectclass
-import tileclass
+import scripts.objectclass
+import scripts.tileclass
 
+objectclass = scripts.objectclass
+tileclass = scripts.tileclass
 
 class Level(object):
-    def __init__(self, size, tiles, objects, offsets):
+    def __init__(self, size, tiles, objects, background, offsets):
         """
-        :param int Level Size, ArrayList Level Tiles, ArrayList, Objects
+        :param size: a grid of A x A tiles that define the level. int.
+        :param tiles: the tiles that comprise the level. Array, ints.
+        :param objects: the objects, including the player, that populate the level. Array, ints. (X pos, Y pos, Obj.)
         """
+
         self.size = size
         self.tiles = []
         self.objects = []
         self.tile_size = 500 / size
+        self.background = background
         self.offsets = offsets
 
         # creates the grid and the lists containing the tiles and objects
@@ -19,11 +25,18 @@ class Level(object):
             for x in range(size):
                 self.tiles.append(tileclass.Tile((x * self.tile_size) + offsets[0],
                                                  (y * self.tile_size) + offsets[1], tiles[(y * size) + x]))
-                
+
         for item in objects:
             self.objects.append(objectclass.Object(((item[0] - 1) * self.tile_size) + offsets[0],
                                                    ((item[1] - 1) * self.tile_size) + offsets[1], item[2]))
 
     def detection(self, direction, x_change, y_change, screen_size):
-        #triggers the player movement
-        self.objects[0].movement(self.objects, 0, direction, x_change, y_change, self.tiles, self.tile_size, self.size, self.offsets, screen_size)
+        # triggers the player movement
+        self.objects[0].movement(self.objects, 0, direction, x_change, y_change, self.tiles, self.tile_size, self.size,
+                                 self.offsets, screen_size)
+
+    def bg(self):
+        # customizable per level background
+        return self.background
+
+

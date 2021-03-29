@@ -1,8 +1,8 @@
 import pygame
 
 # class for objects that sit on top of tiles like the player and crates
-player = pygame.image.load('../images/player.png')
-crate = pygame.image.load('../images/crate.png')
+player = pygame.image.load('images/player.png')
+crate = pygame.image.load('images/crate.png')
 objectset = [player, crate]
 nameset = ["player", "crate"]
 
@@ -59,10 +59,10 @@ class Object(object):
 
 class Player(Object):
     def __init__(self, x, y):
-        #creates a player subclass
+        # creates a player subclass
         super().__init__(x, y)
 
 class Crate(Object):
     def __init__(self, x, y):
-        #creates a crate subclass (includes red/blue crates)
+        # creates a crate subclass (includes red/blue crates)
         super().__init__(x, y)

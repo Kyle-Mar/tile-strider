@@ -1,28 +1,23 @@
 import pygame
-import levels
-import settings
-import levelclass
+import scripts.levels
+import scripts.settings
 import math
 
 # initialize pygame window
 
 pygame.init()
-screen_size = [settings.resolution_x, settings.resolution_y]
-screen_offset = [(screen_size[0] - 500) / 2, (screen_size[1] - 500) / 2]
+screen_size = scripts.settings.screen_size
 screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
-background.fill((0, 0, 0))
-background.convert()
 
 # create clock
 
 clock = pygame.time.Clock()
-FPS = 30
+FPS = scripts.settings.fps
 
 # temporary. ideally here, we create a level manager
-#current_level = levelclass.Level(5, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#                                [[1, 3, 0], [3, 4, 1], [3, 3, 1]], screen_offset)
-current_level = levels.menu1
+level = scripts.levels
+current_level = level.level50
 
 # create game loop
 
@@ -32,11 +27,26 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+        background.fill((current_level.bg()))
+        background.convert()
+
+        # note: these "code snippets" aren't really code, but rather what these blocks should end up doing in general
+
+        # if current_level == none:
+        #  display main menu
+        # else:
+        # load level
+
+        # music stuff is going to go here
+        # if current level == levels.levelX (where X is a level):
+        #   play level song
+        # else:
+        #   play menu theme
+
+
         # move player
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
             if event.key == pygame.K_UP:
                 current_level.detection("up", 0, 0 - current_level.tile_size, screen_size)
             if event.key == pygame.K_DOWN:
@@ -45,6 +55,22 @@ while running:
                 current_level.detection("left", 0 - current_level.tile_size, 0, screen_size)
             if event.key == pygame.K_RIGHT:
                 current_level.detection("right", current_level.tile_size, 0, screen_size)
+            if event.key == pygame.K_ESCAPE:
+                running = False
+            if event.key == pygame.K_1:
+                current_level = level.level51
+            elif event.key == pygame.K_2:
+                current_level = level.level50
+            elif event.key == pygame.K_3:
+                current_level = level.level52
+            elif event.key == pygame.K_4:
+                current_level = level.menu1
+            elif event.key == pygame.K_5:
+                current_level = level.menu2
+            elif event.key == pygame.K_6:
+                current_level = level.menu3
+            elif event.key == pygame.K_7:
+                current_level = level.menu4
 
         # draw new screen
 
