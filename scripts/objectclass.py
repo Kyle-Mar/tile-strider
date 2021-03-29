@@ -1,8 +1,8 @@
 import pygame
 
 # class for objects that sit on top of tiles like the player and crates
-player = pygame.image.load('../images/player.png')
-crate = pygame.image.load('../images/crate.png')
+player = pygame.image.load('images/player.png')
+crate = pygame.image.load('images/crate.png')
 objectset = [player, crate]
 nameset = ["player", "crate"]
 
@@ -24,28 +24,27 @@ class Object(object):
         self.x = new_x
         self.y = new_y
 
-    def movement(self, object_list, object_index, direction, x_change, y_change, tile_list, tile_size, grid_size):
+    def movement(self, object_list, object_index, direction, x_change, y_change, tile_list, tile_size, grid_size, offsets, screen_size):
         # handles movement of player in the desired direction if possible, as well as making sure crates are pushed
         # correctly by the player and other crates and act solid if pushed against a wall
         for item in object_list:
             if direction == "up":
-                condition = item.y > 50 and tile_list[
-                    ((round((item.y - 50) / tile_size) - 1) * grid_size) + round((item.x - 50) / tile_size)].is_floor
+                condition = item.y > offsets[1] and tile_list[
+                    ((round((item.y - offsets[1]) / tile_size) - 1) * grid_size) + round((item.x - offsets[0]) / tile_size)].is_floor
             elif direction == "down":
-                condition = item.y < (550 - tile_size) and tile_list[
-                    ((round((item.y - 50) / tile_size) + 1) * grid_size) + round((item.x - 50) / tile_size)].is_floor
+                condition = item.y < ((screen_size[1] - offsets[1]) - tile_size) and tile_list[
+                    ((round((item.y - offsets[1]) / tile_size) + 1) * grid_size) + round((item.x - offsets[0]) / tile_size)].is_floor
             elif direction == "left":
-                condition = item.x > 50 and tile_list[
-                    (round((item.y - 50) / tile_size) * grid_size) + (round((item.x - 50) / tile_size) - 1)].is_floor
+                condition = item.x > offsets[0] and tile_list[
+                    (round((item.y - offsets[1]) / tile_size) * grid_size) + (round((item.x - offsets[0]) / tile_size) - 1)].is_floor
             elif direction == "right":
-                condition = item.x < (550 - tile_size) and tile_list[
-                    (round((item.y - 50) / tile_size) * grid_size) + (round((item.x - 50) / tile_size) + 1)].is_floor
+                condition = item.x < ((screen_size[0] - offsets[0]) - tile_size) and tile_list[
+                    (round((item.y - offsets[1]) / tile_size) * grid_size) + (round((item.x - offsets[0]) / tile_size) + 1)].is_floor
             if object_list.index(item) == object_index and condition:
                 for item2 in object_list:
-                    if item2.name == "crate" and item.x + x_change == item2.x and item.y + y_change == item2.y:
-                        if object_list[object_list.index(item2)].movement(object_list, object_list.index(item2),
-                                                                          direction, x_change, y_change, tile_list,
-                                                                          tile_size, grid_size):
+                    if item2.name == "crate" and round(item.x + x_change) == round(item2.x) and round(item.y + y_change) == round(item2.y):
+                        if object_list[object_list.index(item2)].movement(object_list, object_list.index(item2), direction, x_change, y_change, tile_list,
+                                     tile_size, grid_size, offsets, screen_size):
                             item.new_coords(item.x + x_change, item.y + y_change)
                             if item.name == "crate":
                                 return True
@@ -60,10 +59,10 @@ class Object(object):
 
 class Player(Object):
     def __init__(self, x, y):
-        #creates a player subclass
+        # creates a player subclass
         super().__init__(x, y)
 
 class Crate(Object):
     def __init__(self, x, y):
-        #creates a crate subclass (includes red/blue crates)
+        # creates a crate subclass (includes red/blue crates)
         super().__init__(x, y)

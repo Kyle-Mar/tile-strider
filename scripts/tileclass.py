@@ -1,16 +1,16 @@
 import pygame
 
 # class for tiles
-pit = pygame.image.load('../images/pit.png')
-floor = pygame.image.load('../images/floor.png')
-wall = pygame.image.load('../images/wall.png')
-goal = pygame.image.load('../images/goal.png')
-spawn = pygame.image.load('../images/player_spawn.png')
-lever = pygame.image.load('../images/switch.png')
-button = pygame.image.load('../images/button.png')
-arrow = pygame.image.load('../images/right1.png')
-rotator = pygame.image.load('../images/tile_clockwise.png')
-void = pygame.image.load('../images/void.png')
+pit = pygame.image.load('images/pit.png')
+floor = pygame.image.load('images/floor.png')
+wall = pygame.image.load('images/wall.png')
+goal = pygame.image.load('images/goal.png')
+spawn = pygame.image.load('images/player_spawn.png')
+lever = pygame.image.load('images/switch.png')
+button = pygame.image.load('images/button.png')
+arrow = pygame.image.load('images/right1.png')
+rotator = pygame.image.load('images/tile_clockwise.png')
+void = pygame.image.load('images/void.png')
 
 tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn, void]
 nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn", "void"]
