@@ -1,11 +1,13 @@
 import pygame
+import levels
+import settings
 import levelclass
 import math
 
 # initialize pygame window
 
 pygame.init()
-screen_size = [1280, 720]
+screen_size = [settings.resolution_x, settings.resolution_y]
 screen_offset = [(screen_size[0] - 500) / 2, (screen_size[1] - 500) / 2]
 screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
@@ -20,8 +22,7 @@ FPS = 30
 # temporary. ideally here, we create a level manager
 #current_level = levelclass.Level(5, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 #                                [[1, 3, 0], [3, 4, 1], [3, 3, 1]], screen_offset)
-current_level = levelclass.Level(7, [2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 2, 1, 0, 0, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2],
-                                [[2, 4, 0], [4, 5, 1], [4, 4, 1]], screen_offset)
+current_level = levels.menu1
 
 # create game loop
 
@@ -34,6 +35,8 @@ while running:
         # move player
 
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
             if event.key == pygame.K_UP:
                 current_level.detection("up", 0, 0 - current_level.tile_size, screen_size)
             if event.key == pygame.K_DOWN:

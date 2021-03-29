@@ -4,8 +4,16 @@ import pygame
 pit = pygame.image.load('../images/pit.png')
 floor = pygame.image.load('../images/floor.png')
 wall = pygame.image.load('../images/wall.png')
-tileset = [pit, floor, wall]
-nameset = ["pit", "floor", "wall"]
+goal = pygame.image.load('../images/goal.png')
+spawn = pygame.image.load('../images/player_spawn.png')
+lever = pygame.image.load('../images/switch.png')
+button = pygame.image.load('../images/button.png')
+arrow = pygame.image.load('../images/right1.png')
+rotator = pygame.image.load('../images/tile_clockwise.png')
+void = pygame.image.load('../images/void.png')
+
+tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn, void]
+nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn", "void"]
 
 
 class Tile(object):
@@ -16,7 +24,7 @@ class Tile(object):
         self.surface = tileset[variant]
         self.name = nameset[variant]
         self.is_floor = ""
-        if self.name == "pit" or self.name == "wall":
+        if self.name == "pit" or self.name == "wall" or self.name == "void":
             self.is_floor = False
         else:
             self.is_floor = True
@@ -29,40 +37,50 @@ class Tile(object):
 
 class Pit(Tile):
     def __init__(self):
-        #creates a pit subclass
+        # creates a pit subclass
         super().__init__()
         
 class Floor(Tile):
     def __init__(self):
-        #creates a floor subclass (includes spawn platform and red/blue blocks)
+        # creates a floor subclass (includes spawn platform and red/blue blocks)
         super().__init__()
 
 class Wall(Tile):
     def __init__(self):
-        #creates a wall subclass
+        # creates a wall subclass
         super().__init__()
 
 class Exit(Tile):
     def __init__(self):
-        #creates an exit subclass
+        # creates an exit subclass
         super().__init__()
 
 class Lever(Tile):
     def __init__(self):
-        #creates a lever subclass (includes all variants)
+        # creates a lever subclass (includes all variants)
         super().__init__()
 
 class Button(Tile):
     def __init__(self):
-        #creates a button subclass (includes all variants)
+        # creates a button subclass (includes all variants)
         super().__init__()
 
 class Rotator(Tile):
     def __init__(self):
-        #creates an arrow rotator subclass (includes all variants)
+        # creates an arrow rotator subclass (includes all variants)
         super().__init__()
 
 class Arrow(Tile):
     def __init__(self):
-        #creates a pushing arrow subclass (includes all variants)
+        # creates a pushing arrow subclass (includes all variants)
         super().__init__()
+
+    class Spawn(Tile):
+        def __init__(self):
+            # creates a designated spawn tile
+            super().__init__()
+
+    class Void(Tile):
+        def __init__(self):
+            # creates a void so that more unique shapes other than a square can be made
+            super().__init__()
