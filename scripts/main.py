@@ -1,23 +1,22 @@
 import pygame
-import scripts.levels
-import scripts.settings
+import levels
+import settings
 import math
 
 # initialize pygame window
 
 pygame.init()
-screen_size = scripts.settings.screen_size
+screen_size = settings.screen_size
 screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
 
 # create clock
 
 clock = pygame.time.Clock()
-FPS = scripts.settings.fps
+FPS = settings.fps
 
 # temporary. ideally here, we create a level manager
-level = scripts.levels
-current_level = level.level50
+current_level = levels.level50
 
 # create game loop
 
@@ -58,19 +57,19 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
             if event.key == pygame.K_1:
-                current_level = level.level51
+                current_level = levels.level51
             elif event.key == pygame.K_2:
-                current_level = level.level50
+                current_level = levels.level50
             elif event.key == pygame.K_3:
-                current_level = level.level52
+                current_level = levels.level52
             elif event.key == pygame.K_4:
-                current_level = level.menu1
+                current_level = levels.menu1
             elif event.key == pygame.K_5:
-                current_level = level.menu2
+                current_level = levels.menu2
             elif event.key == pygame.K_6:
-                current_level = level.menu3
+                current_level = levels.menu3
             elif event.key == pygame.K_7:
-                current_level = level.menu4
+                current_level = levels.menu4
 
         # draw new screen
 

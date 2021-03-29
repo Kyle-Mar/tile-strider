@@ -1,8 +1,5 @@
-import scripts.objectclass
-import scripts.tileclass
-
-objectclass = scripts.objectclass
-tileclass = scripts.tileclass
+import objectclass
+import tileclass
 
 class Level(object):
     def __init__(self, size, tiles, objects, background, offsets):
