@@ -48,7 +48,6 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                current_level.detection("up", 0, 0 - current_level.tile_size, screen_size)
                 moves += 1
                 lm.level_list[current_level].detection("up", 0, 0 - lm.level_list[current_level].tile_size, screen_size)
             if event.key == pygame.K_DOWN:
@@ -61,13 +60,13 @@ while running:
                 lm.level_list[current_level].detection("right", lm.level_list[current_level].tile_size, 0, screen_size)
                 moves += 1
             if event.key == pygame.K_u and moves > 0:
-                current_level.undo()
+                lm.level_list[current_level].undo()
                 moves -= 1
             if event.key == pygame.K_r:
-                current_level.restart(moves)
+                lm.level_list[current_level].restart(moves)
                 moves = 0
             if event.key == pygame.K_d:
-                print(current_level.objects[1].position_history)
+                print(lm.level_list[current_level].objects[1].position_history)
                 print(moves)
             if event.key == pygame.K_ESCAPE:
                 running = False
