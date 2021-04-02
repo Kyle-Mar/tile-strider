@@ -15,6 +15,8 @@ void = pygame.image.load('../images/void.png')
 tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn, void]
 nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn", "void"]
 
+# variable to access player object
+
 
 class Tile(object):
     def __init__(self, x, y, variant):
@@ -26,6 +28,10 @@ class Tile(object):
         self.state_history = []
         # the list above will be used for reverting changes to the states of tiles after an undo or
         # restart is triggered once tile functionality and different states are implemented
+
+        # create action funciton
+        # will be overwritten in subclasses for those with actions
+        # return TypeException if the superclass function runs instead of subclass function
         self.is_floor = ""
         if self.name == "pit" or self.name == "wall" or self.name == "void":
             self.is_floor = False
@@ -52,7 +58,7 @@ class Tile(object):
         if variant == 9:
             self.__class__ = Void
 
-
+# TODO can check if player is on top of current tile if player.x and player.y = self.x and self.y
 class Pit(Tile):
     def __init__(self):
         # creates a pit subclass
@@ -75,6 +81,7 @@ class Goal(Tile):
     def __init__(self):
         #creates an exit subclass
         super().__init__()
+    # action function named same thing for all tile classes such that we can call the function regardless of class
 
 
 class Lever(Tile):
