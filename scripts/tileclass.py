@@ -23,6 +23,9 @@ class Tile(object):
         self.y = y
         self.surface = tileset[variant]
         self.name = nameset[variant]
+        self.state_history = []
+        # the list above will be used for reverting changes to the states of tiles after an undo or
+        # restart is triggered once tile functionality and different states are implemented
         self.is_floor = ""
         if self.name == "pit" or self.name == "wall" or self.name == "void":
             self.is_floor = False

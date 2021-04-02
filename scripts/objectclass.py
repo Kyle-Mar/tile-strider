@@ -14,6 +14,7 @@ class Object(object):
         self.y = y
         self.surface = objectset[variant]
         self.name = nameset[variant]
+        self.position_history = [[x, y]]
         if variant == 0:
             self.__class__ = Player
         else:
@@ -56,6 +57,16 @@ class Object(object):
                 return True
         if object_list[object_index].name == "crate":
             return False
+
+    def back(self, back_num):
+        #reverts the object's position to a previous state in the position history
+        self.new_coords(self.position_history[len(self.position_history) - back_num - 1][0],self.position_history[len(self.position_history) - back_num - 1][1])
+        for i in range(back_num):
+            self.position_history.pop(-1)
+
+    def update(self):
+        #adds an entry to the position history list after the player moves
+        self.position_history.append([self.x, self.y])
 
 class Player(Object):
     def __init__(self, x, y):
