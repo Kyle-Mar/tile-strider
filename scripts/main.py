@@ -17,6 +17,7 @@ FPS = settings.fps
 
 # temporary. ideally here, we create a level manager
 current_level = levels.level50
+moves = 0
 
 # create game loop
 
@@ -48,12 +49,25 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 current_level.detection("up", 0, 0 - current_level.tile_size, screen_size)
+                moves += 1
             if event.key == pygame.K_DOWN:
                 current_level.detection("down", 0, current_level.tile_size, screen_size)
+                moves += 1
             if event.key == pygame.K_LEFT:
                 current_level.detection("left", 0 - current_level.tile_size, 0, screen_size)
+                moves += 1
             if event.key == pygame.K_RIGHT:
                 current_level.detection("right", current_level.tile_size, 0, screen_size)
+                moves += 1
+            if event.key == pygame.K_u and moves > 0:
+                current_level.undo()
+                moves -= 1
+            if event.key == pygame.K_r:
+                current_level.restart(moves)
+                moves = 0
+            if event.key == pygame.K_d:
+                print(current_level.objects[1].position_history)
+                print(moves)
             if event.key == pygame.K_ESCAPE:
                 running = False
             if event.key == pygame.K_1:

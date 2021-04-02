@@ -26,11 +26,22 @@ class Level(object):
         for item in objects:
             self.objects.append(objectclass.Object(((item[0] - 1) * self.tile_size) + offsets[0],
                                                    ((item[1] - 1) * self.tile_size) + offsets[1], item[2]))
+    def undo(self):
+        # triggers an undoing of the most recent move
+        for item in self.objects:
+            item.back(1)
+
+    def restart(self, moves):
+        # triggers a full level restart
+        for item in self.objects:
+            item.back(moves)
 
     def detection(self, direction, x_change, y_change, screen_size):
         # triggers the player movement
         self.objects[0].movement(self.objects, 0, direction, x_change, y_change, self.tiles, self.tile_size, self.size,
                                  self.offsets, screen_size)
+        for item in self.objects:
+            item.update()
 
     def bg(self):
         # customizable per level background
