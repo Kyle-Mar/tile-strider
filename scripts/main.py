@@ -23,7 +23,31 @@ moves = 0
 # create game loop
 
 running = True
+# variable to check if we should be in the menu or not
+menu = True
 while running:
+    # check to see if the menu has been gotten through or not
+    if menu:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        background.fill((lm.level_list[current_level].bg()))
+        background.convert()
+        # get mouse information
+        Mx,My = pygame.mouse.get_pos()
+        L,R,C = pygame.mouse.get_pressed()
+        # draws the menu image at the middle of the screen
+        screen.blit('../images/Start 1.png', (settings.resolution_x/50 - 144, settings.resolution_y/50 - 144))
+        # changes menu display if mouse is hovering the start text
+        if 207 < Mx < 351 and 229 < My < 273:
+            screen.blit('../images/Start 2.png', (settings.resolution_x/50 - 144, settings.resolution_y/50 - 144))
+            # checks if the left mouse button has been pressed
+            if L:
+                menu = False
+        clock.tick(FPS)
+        pygame.display.flip()
+        continue
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
