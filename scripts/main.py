@@ -1,23 +1,25 @@
 import pygame
+import gamedata
 import levels
-import settings
+# do not remove ^
 import math
 
 # initialize pygame window
 
 pygame.init()
-screen_size = settings.screen_size
+screen_size = gamedata.screen_size
 screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
 
 # create clock
 
 clock = pygame.time.Clock()
-FPS = settings.fps
+FPS = gamedata.fps
 
 # temporary. ideally here, we create a level manager
-current_level = levels.level50
-
+lm = gamedata.levelmanager
+current_level = 0
+moves = 0
 # create game loop
 
 running = True
@@ -29,7 +31,7 @@ while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        background.fill((current_level.bg()))
+        background.fill((lm.level_list[current_level].bg()))
         background.convert()
         # get mouse information
         Mx,My = pygame.mouse.get_pos()
@@ -49,8 +51,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-        background.fill((current_level.bg()))
+        background.fill((lm.level_list[current_level].bg()))
         background.convert()
 
         # note: these "code snippets" aren't really code, but rather what these blocks should end up doing in general
@@ -71,29 +72,42 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                current_level.detection("up", 0, 0 - current_level.tile_size, screen_size)
+                moves += 1
+                lm.level_list[current_level].detection("up", 0, 0 - lm.level_list[current_level].tile_size, screen_size)
             if event.key == pygame.K_DOWN:
-                current_level.detection("down", 0, current_level.tile_size, screen_size)
+                lm.level_list[current_level].detection("down", 0, lm.level_list[current_level].tile_size, screen_size)
+                moves += 1
             if event.key == pygame.K_LEFT:
-                current_level.detection("left", 0 - current_level.tile_size, 0, screen_size)
+                lm.level_list[current_level].detection("left", 0 - lm.level_list[current_level].tile_size, 0, screen_size)
+                moves += 1
             if event.key == pygame.K_RIGHT:
-                current_level.detection("right", current_level.tile_size, 0, screen_size)
+                lm.level_list[current_level].detection("right", lm.level_list[current_level].tile_size, 0, screen_size)
+                moves += 1
+            if event.key == pygame.K_u and moves > 0:
+                lm.level_list[current_level].undo()
+                moves -= 1
+            if event.key == pygame.K_r:
+                lm.level_list[current_level].restart(moves)
+                moves = 0
+            if event.key == pygame.K_d:
+                print(lm.level_list[current_level].objects[1].position_history)
+                print(moves)
             if event.key == pygame.K_ESCAPE:
                 running = False
             if event.key == pygame.K_1:
-                current_level = levels.level51
+                current_level = lm.level_list[0]
             elif event.key == pygame.K_2:
-                current_level = levels.level50
+                current_level = lm.level_list[1]
             elif event.key == pygame.K_3:
-                current_level = levels.level52
+                current_level = lm.level_list[2]
             elif event.key == pygame.K_4:
-                current_level = levels.menu1
+                current_level = lm.level_list[3]
             elif event.key == pygame.K_5:
-                current_level = levels.menu2
+                current_level = lm.level_list[4]
             elif event.key == pygame.K_6:
-                current_level = levels.menu3
+                current_level = lm.level_list[5]
             elif event.key == pygame.K_7:
-                current_level = levels.menu4
+                current_level = lm.level_list[6]
 
         # draw new screen
 
@@ -101,15 +115,14 @@ while running:
 
         # update the level to the screen
 
-        for i in range(len(current_level.tiles)):
-            screen.blit(pygame.transform.scale(current_level.tiles[i].surface,
-                                            (math.ceil(current_level.tile_size), math.ceil(current_level.tile_size))),
-                    (round(current_level.tiles[i].x), round(current_level.tiles[i].y)))
-        for i in range(len(current_level.objects)):
-            screen.blit(pygame.transform.scale(current_level.objects[i].surface,
-                                            (math.ceil(current_level.tile_size), math.ceil(current_level.tile_size))),
-                    (round(current_level.objects[i].x), round(current_level.objects[i].y)))
-
+        for i in range(len(lm.level_list[current_level].tiles)):
+            screen.blit(pygame.transform.scale(lm.level_list[current_level].tiles[i].surface,
+                                              (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
+                       (round(lm.level_list[current_level].tiles[i].x), round(lm.level_list[current_level].tiles[i].y)))
+        for i in range(len(lm.level_list[current_level].objects)):
+            screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
+                                              (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
+                       (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
         clock.tick(FPS)
         pygame.display.flip()
 
