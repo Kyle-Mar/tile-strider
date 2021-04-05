@@ -123,10 +123,7 @@ while running:
             screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
                                               (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
                        (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
-<<<<<<< HEAD
-=======
 
->>>>>>> f5bb1b1a962748ad86403699aee0dd11a5d85012
         clock.tick(FPS)
         pygame.display.flip()
 
