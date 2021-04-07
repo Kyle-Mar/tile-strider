@@ -1,6 +1,4 @@
 import pygame
-import main
-# I have no idea if this is right but fuck it its something
 
 
 # class for tiles

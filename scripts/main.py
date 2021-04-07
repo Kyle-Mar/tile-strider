@@ -10,7 +10,8 @@ pygame.init()
 screen_size = gamedata.screen_size
 screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
-
+start1 = pygame.image.load("../images/Start 1.png")
+start2 = pygame.image.load("../images/Start 2.png")
 # create clock
 
 clock = pygame.time.Clock()
@@ -37,10 +38,10 @@ while running:
         Mx,My = pygame.mouse.get_pos()
         L,R,C = pygame.mouse.get_pressed()
         # draws the menu image at the middle of the screen
-        screen.blit('../images/Start 1.png', (settings.resolution_x/50 - 144, settings.resolution_y/50 - 144))
+        screen.blit(start1, (gamedata.resolution_x/50 - 144, gamedata.resolution_y/50 - 144))
         # changes menu display if mouse is hovering the start text
         if 207 < Mx < 351 and 229 < My < 273:
-            screen.blit('../images/Start 2.png', (settings.resolution_x/50 - 144, settings.resolution_y/50 - 144))
+            screen.blit(start2, (gamedata.resolution_x/50 - 144, gamedata.resolution_y/50 - 144))
             # checks if the left mouse button has been pressed
             if L:
                 menu = False
