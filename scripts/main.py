@@ -98,19 +98,19 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
             if event.key == pygame.K_1:
-                current_level = lm.level_list[0]
+                current_level = 0
             elif event.key == pygame.K_2:
-                current_level = lm.level_list[1]
+                current_level = 1
             elif event.key == pygame.K_3:
-                current_level = lm.level_list[2]
+                current_level = 2
             elif event.key == pygame.K_4:
-                current_level = lm.level_list[3]
+                current_level = 3
             elif event.key == pygame.K_5:
-                current_level = lm.level_list[4]
+                current_level = 4
             elif event.key == pygame.K_6:
-                current_level = lm.level_list[5]
+                current_level = 5
             elif event.key == pygame.K_7:
-                current_level = lm.level_list[6]
+                current_level = 6
 
         # draw new screen
 
