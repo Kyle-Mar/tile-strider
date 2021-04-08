@@ -1,5 +1,6 @@
 import pygame
 
+
 # class for tiles
 pit = pygame.image.load('../images/pit.png')
 floor = pygame.image.load('../images/floor.png')
@@ -15,6 +16,8 @@ void = pygame.image.load('../images/void.png')
 tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn, void]
 nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn", "void"]
 
+# variable to access player object
+
 
 class Tile(object):
     def __init__(self, x, y, variant):
@@ -26,6 +29,7 @@ class Tile(object):
         self.state_history = []
         # the list above will be used for reverting changes to the states of tiles after an undo or
         # restart is triggered once tile functionality and different states are implemented
+
         self.is_floor = ""
         if self.name == "pit" or self.name == "wall" or self.name == "void":
             self.is_floor = False
@@ -52,11 +56,23 @@ class Tile(object):
         if variant == 9:
             self.__class__ = Void
 
+    # create action funciton
+    # will be overwritten in subclasses for those with actions
+    # return TypeException if the superclass function runs instead of subclass function
+    def action(self):
+        return  # figure out how to return a type exception
+
 
 class Pit(Tile):
     def __init__(self):
         # creates a pit subclass
         super().__init__()
+
+    def action(self):
+        """
+        :return:
+        """
+        return
 
 
 class Floor(Tile):
@@ -64,11 +80,27 @@ class Floor(Tile):
         # creates a floor subclass (includes spawn platform and red/blue blocks)
         super().__init__()
 
+    def action(self):
+        """
+        :return:
+        """
+        return
+
 
 class Wall(Tile):
     def __init__(self):
         # creates a wall subclass
         super().__init__()
+        # variable that tells whether this tile is red, blue, or no color (grey)
+        self.type = "grey"
+        # for colored tiles, tells if tile should be an active wall or not
+        self.on = True
+
+    def action(self):
+        """
+        :return:
+        """
+        return
 
 
 class Goal(Tile):
@@ -76,17 +108,73 @@ class Goal(Tile):
         #creates an exit subclass
         super().__init__()
 
+    def action(self):
+        """
+        increments current_level
+        :return:
+        """
+        main.current_level += 1
 
 class Lever(Tile):
     def __init__(self):
         # creates a lever subclass (includes all variants)
         super().__init__()
+        # variable that tells whether this tile is red, blue, or no color (grey)
+        self.type = "grey"
+
+    def action(self):
+        """
+        :return:
+        """
+        # change all if grey
+        if self.type == "grey":
+            Wall.on = not Wall.on
+            # object.crate.on = not object.crate.on
+
+        # change on Red tiles when switch is Red
+        elif self.type == "red":
+            if Wall.type == "red":
+                Wall.on = not Wall.on   # swaps whatever state the wall is in
+            # if object.crate.type == "red"
+                # object.crate.on = not object.crate.on
+
+        # change only blue tiles when switch is blue
+        elif self.type == "blue":
+            if Wall.type == "blue":
+                Wall.on = not Wall.on   # swaps whatever state the wall is in
+            # if object.crate.type == "blue"
+                # object.crate.on = not object.crate.on
 
 
 class Button(Tile):
     def __init__(self):
         # creates a button subclass (includes all variants)
         super().__init__()
+        # variable that tells whether this tile is red, blue, or no color (grey)
+        self.type = "grey"
+
+    def action(self):
+        """
+        :return:
+        """
+        # change all if grey
+        if self.type == "grey":
+            Wall.on = not Wall.on
+            # object.crate.on = not object.crate.on
+
+        # change on Red tiles when switch is Red
+        elif self.type == "red":
+            if Wall.type == "red":
+                Wall.on = not Wall.on  # swaps whatever state the wall is in
+            # if object.crate.type == "red"
+            # object.crate.on = not object.crate.on
+
+        # change only blue tiles when switch is blue
+        elif self.type == "blue":
+            if Wall.type == "blue":
+                Wall.on = not Wall.on  # swaps whatever state the wall is in
+            # if object.crate.type == "blue"
+            # object.crate.on = not object.crate.on
 
 
 class Rotator(Tile):
@@ -94,11 +182,23 @@ class Rotator(Tile):
         # creates an arrow rotator subclass (includes all variants)
         super().__init__()
 
+    def action(self):
+        """
+        :return:
+        """
+        return
+
 
 class Arrow(Tile):
     def __init__(self):
         # creates a pushing arrow subclass (includes all variants)
         super().__init__()
+
+    def action(self):
+        """
+        :return:
+        """
+        return
 
 
 class Spawn(Tile):
@@ -106,8 +206,19 @@ class Spawn(Tile):
         # creates a designated spawn tile
         super().__init__()
 
+    def action(self):
+        """
+        :return:
+        """
+        return
 
 class Void(Tile):
     def __init__(self):
         # creates a void so that more unique shapes other than a square can be made
         super().__init__()
+
+    def action(self):
+        """
+        :return:
+        """
+        return

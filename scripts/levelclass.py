@@ -29,6 +29,15 @@ class Level(object):
         for item in objects:
             self.objects.append(objectclass.Object(((item[0] - 1) * self.tile_size) + offsets[0],
                                                    ((item[1] - 1) * self.tile_size) + offsets[1], item[2]))
+
+        if gamedata.levelmanager is not None:
+            gamedata.levelmanager.level_list.append(self)
+        else:
+            print('test')
+            gamedata.levelmanager = levelmanager.LevelManager()
+            gamedata.levelmanager.level_list.append(self)
+
+
     def undo(self):
         # triggers an undoing of the most recent move
         for item in self.objects:
@@ -38,13 +47,6 @@ class Level(object):
         # triggers a full level restart
         for item in self.objects:
             item.back(moves)
-
-        if gamedata.levelmanager is not None:
-            gamedata.levelmanager.level_list.append(self)
-        else:
-            gamedata.levelmanager = levelmanager.LevelManager()
-            gamedata.levelmanager.level_list.append(self)
-
 
 
     def detection(self, direction, x_change, y_change, screen_size):
