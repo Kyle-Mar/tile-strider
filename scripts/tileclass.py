@@ -1,5 +1,6 @@
 import pygame
-
+import gamedata
+import objectclass
 
 # class for tiles
 pit = pygame.image.load('../images/pit.png')
@@ -58,8 +59,8 @@ class Tile(object):
 
     # create action funciton
     # will be overwritten in subclasses for those with actions
-    # return TypeException if the superclass function runs instead of subclass function
-    def action(self):
+    #takes object so we can determine what object is moving into the spot
+    def action(self, object):
         return  # figure out how to return a type exception
 
 
@@ -68,19 +69,26 @@ class Pit(Tile):
         # creates a pit subclass
         super().__init__()
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
-        return
-
+        lm = gamedata.levelmanager
+        #if its the player restart
+        if isinstance(object, objectclass.Player):
+            lm.level_list[lm.current_level].restart(lm.level_list[lm.current_level].moves)
+            lm.level_list[lm.current_level].moves = 0
+        #set object inactive otherwise
+        else:
+            object.active = False
+            return type(self)
 
 class Floor(Tile):
     def __init__(self):
         # creates a floor subclass (includes spawn platform and red/blue blocks)
         super().__init__()
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
@@ -96,7 +104,7 @@ class Wall(Tile):
         # for colored tiles, tells if tile should be an active wall or not
         self.on = True
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
@@ -108,12 +116,12 @@ class Goal(Tile):
         #creates an exit subclass
         super().__init__()
 
-    def action(self):
+    def action(self, object):
         """
         increments current_level
         :return:
         """
-        main.current_level += 1
+        gamedata.levelmanager.current_level += 1
 
 class Lever(Tile):
     def __init__(self):
@@ -122,7 +130,7 @@ class Lever(Tile):
         # variable that tells whether this tile is red, blue, or no color (grey)
         self.type = "grey"
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
@@ -153,7 +161,7 @@ class Button(Tile):
         # variable that tells whether this tile is red, blue, or no color (grey)
         self.type = "grey"
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
@@ -182,7 +190,7 @@ class Rotator(Tile):
         # creates an arrow rotator subclass (includes all variants)
         super().__init__()
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
@@ -194,7 +202,7 @@ class Arrow(Tile):
         # creates a pushing arrow subclass (includes all variants)
         super().__init__()
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
@@ -206,7 +214,7 @@ class Spawn(Tile):
         # creates a designated spawn tile
         super().__init__()
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """
@@ -217,7 +225,7 @@ class Void(Tile):
         # creates a void so that more unique shapes other than a square can be made
         super().__init__()
 
-    def action(self):
+    def action(self, object):
         """
         :return:
         """

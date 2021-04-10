@@ -21,8 +21,7 @@ FPS = gamedata.fps
 
 # temporary. ideally here, we create a level manager
 lm = gamedata.levelmanager
-current_level = 0
-moves = 0
+current_level = lm.current_level
 # create game loop
 
 running = True
@@ -75,26 +74,25 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                moves += 1
                 lm.level_list[current_level].detection("up", 0, 0 - lm.level_list[current_level].tile_size, screen_size)
+                lm.level_list[current_level].moves += 1
             if event.key == pygame.K_DOWN:
                 lm.level_list[current_level].detection("down", 0, lm.level_list[current_level].tile_size, screen_size)
-                moves += 1
+                lm.level_list[current_level].moves += 1
             if event.key == pygame.K_LEFT:
                 lm.level_list[current_level].detection("left", 0 - lm.level_list[current_level].tile_size, 0, screen_size)
-                moves += 1
+                lm.level_list[current_level].moves += 1
             if event.key == pygame.K_RIGHT:
                 lm.level_list[current_level].detection("right", lm.level_list[current_level].tile_size, 0, screen_size)
-                moves += 1
-            if event.key == pygame.K_u and moves > 0:
+                lm.level_list[current_level].moves += 1
+            if event.key == pygame.K_u and lm.level_list[current_level].moves > 0:
                 lm.level_list[current_level].undo()
-                moves -= 1
+                lm.level_list[current_level].moves -= 1
             if event.key == pygame.K_r:
-                lm.level_list[current_level].restart(moves)
-                moves = 0
+                lm.level_list[current_level].restart(lm.level_list[current_level].moves)
+                lm.level_list[current_level].moves = 0
             if event.key == pygame.K_d:
                 print(lm.level_list[current_level].objects[1].position_history)
-                print(moves)
             if event.key == pygame.K_ESCAPE:
                 running = False
             if event.key == pygame.K_1:
@@ -123,9 +121,11 @@ while running:
                                               (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
                        (round(lm.level_list[current_level].tiles[i].x), round(lm.level_list[current_level].tiles[i].y)))
         for i in range(len(lm.level_list[current_level].objects)):
-            screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
-                                              (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
-                       (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
+            #check if object is active otherwise don't render
+            if lm.level_list[current_level].objects[i].active:
+                screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
+                                                  (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
+                           (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
 
         clock.tick(FPS)
         pygame.display.flip()

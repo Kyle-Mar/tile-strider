@@ -19,6 +19,8 @@ class Level(object):
         self.tile_size = 500 / size
         self.background = background
         self.offsets = offsets
+        #we need to keep the moves property here in order to reset the world from other places
+        self.moves = 0
         # creates the grid and the lists containing the tiles and objects
 
         for y in range(size):
@@ -33,7 +35,6 @@ class Level(object):
         if gamedata.levelmanager is not None:
             gamedata.levelmanager.level_list.append(self)
         else:
-            print('test')
             gamedata.levelmanager = levelmanager.LevelManager()
             gamedata.levelmanager.level_list.append(self)
 
@@ -46,6 +47,7 @@ class Level(object):
     def restart(self, moves):
         # triggers a full level restart
         for item in self.objects:
+            item.active = True
             item.back(moves)
 
 
@@ -60,4 +62,19 @@ class Level(object):
         # customizable per level background
         return self.background
 
+    @property
+    def moves(self):
+        """
+        :param: a Point
+        :return int times slimed
+        """
+        return self._moves
 
+    @moves.setter
+    def moves(self, value):
+        """
+        :param: a Level and new value
+        :return: changes moves count to new value
+        """
+        if isinstance(value, int):
+            self._moves = value

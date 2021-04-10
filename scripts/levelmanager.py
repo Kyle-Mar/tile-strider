@@ -4,4 +4,5 @@ class LevelManager(object):
         :return LevelManager Object
         """
         self.level_list = []
+        self.current_level = 0
         # create a way to quickly change the current level with integers
