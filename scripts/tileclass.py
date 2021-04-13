@@ -1,5 +1,6 @@
 import pygame
 
+
 # class for tiles
 pit = pygame.image.load('../images/pit.png')
 floor = pygame.image.load('../images/floor.png')
@@ -19,6 +20,8 @@ blue_block_on = pygame.image.load('../images/blue_floor.png')
 tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn, void, red_block, blue_block]
 nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn", "void", "red_block", "blue_block"]
 
+# variable to access player object
+
 
 class Tile(object):
     def __init__(self, x, y, variant, state):
@@ -31,6 +34,7 @@ class Tile(object):
         self.state_history = [state]
         # the list above will be used for reverting changes to the states of tiles after an undo or
         # restart is triggered once tile functionality and different states are implemented
+
         self.is_floor = ""
         if self.name == "pit" or self.name == "wall" or self.name == "void":
             self.is_floor = False
@@ -72,11 +76,23 @@ class Tile(object):
     def action(self):
         return  # figure out how to return a type exception
 
+    # create action funciton
+    # will be overwritten in subclasses for those with actions
+    # return TypeException if the superclass function runs instead of subclass function
+    def action(self):
+        return  # figure out how to return a type exception
+
 
 class Pit(Tile):
     def __init__(self):
         # creates a pit subclass
         super().__init__()        
+
+    def action(self):
+        """
+        :return:
+        """
+        return
 
 
 class Floor(Tile):
@@ -84,11 +100,27 @@ class Floor(Tile):
         # creates a floor subclass (includes spawn platform and red/blue blocks)
         super().__init__()
 
+    def action(self):
+        """
+        :return:
+        """
+        return
+
 
 class Wall(Tile):
     def __init__(self):
         # creates a wall subclass
         super().__init__()
+        # variable that tells whether this tile is red, blue, or no color (grey)
+        self.type = "grey"
+        # for colored tiles, tells if tile should be an active wall or not
+        self.on = True
+
+    def action(self):
+        """
+        :return:
+        """
+        return
 
     def update_state(self, red_on, blue_on):
         #updates how the wall behaves depending on which colors are on or off
@@ -123,6 +155,12 @@ class Goal(Tile):
         #creates an exit subclass
         super().__init__()
 
+    def action(self):
+        """
+        increments current_level
+        :return:
+        """
+        main.current_level += 1
 
 class Lever(Tile):
     def __init__(self):
@@ -130,6 +168,7 @@ class Lever(Tile):
         super().__init__()
         # variable that tells whether this tile is red, blue, or no color (grey)
         self.type = "grey"
+
 
     def detect(self, objects):
         #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered)
@@ -288,6 +327,11 @@ class Spawn(Tile):
         # creates a designated spawn tile
         super().__init__()
 
+    def action(self):
+        """
+        :return:
+        """
+        return
 
 class Void(Tile):
     def __init__(self):

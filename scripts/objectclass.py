@@ -39,6 +39,7 @@ class Object(object):
     def movement_detection(self, object_list, object_index, tile_list, tile_size, grid_size, offsets, screen_size):
         # handles movement of player in the desired direction if possible, as well as making sure crates are pushed
         # correctly by the player and other crates and act solid if pushed against a wall
+        next_tile = None
         for item in object_list:
             if len(item.push_requests) != 0:
                 x_change = 0
@@ -70,6 +71,31 @@ class Object(object):
                                     return True
                                 else:
                                     return
+
+            if direction == "up":
+                condition = item.y > offsets[1] and tile_list[
+                    ((round((item.y - offsets[1]) / tile_size) - 1) * grid_size) + round((item.x - offsets[0]) / tile_size)].is_floor
+                #next_tile = tile list thing
+            elif direction == "down":
+                condition = item.y < ((screen_size[1] - offsets[1]) - tile_size) and tile_list[
+                    ((round((item.y - offsets[1]) / tile_size) + 1) * grid_size) + round((item.x - offsets[0]) / tile_size)].is_floor
+            elif direction == "left":
+                condition = item.x > offsets[0] and tile_list[
+                    (round((item.y - offsets[1]) / tile_size) * grid_size) + (round((item.x - offsets[0]) / tile_size) - 1)].is_floor
+            elif direction == "right":
+                condition = item.x < ((screen_size[0] - offsets[0]) - tile_size) and tile_list[
+                    (round((item.y - offsets[1]) / tile_size) * grid_size) + (round((item.x - offsets[0]) / tile_size) + 1)].is_floor
+            # TODO: check if nexttile has an action associated with it.
+            # if so then we do the action
+
+            if object_list.index(item) == object_index and condition:
+                for item2 in object_list:
+                    if item2.name == "crate" and round(item.x + x_change) == round(item2.x) and round(item.y + y_change) == round(item2.y):
+                        if object_list[object_list.index(item2)].movement(object_list, object_list.index(item2), direction, x_change, y_change, tile_list,
+                                                                          tile_size, grid_size, offsets, screen_size):
+                            item.new_coords(item.x + x_change, item.y + y_change)
+                            if item.name == "crate":
+                                return True
                             else:
                                 item.push_requests.pop(0)
                                 return
@@ -113,6 +139,7 @@ class Crate(Object):
         # creates a crate subclass (includes red/blue crates)
         super().__init__(x, y)
 
+
     def update_state(self, red_on, blue_on):
         #updates how the crate behaves depending on which colors are on or off
         if self.type == "red":
@@ -129,3 +156,4 @@ class Crate(Object):
             else:
                 self.state = 0
                 self.is_anchored = True
+

@@ -10,7 +10,10 @@ pygame.init()
 screen_size = gamedata.screen_size
 screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
-
+start1 = pygame.image.load("../images/Start 1.png")
+start2 = pygame.image.load("../images/Start 2.png")
+#rectangle of image at position where the image will be placed
+start1Rect = start1.get_rect(center=((gamedata.resolution_x/2, gamedata.resolution_y/2)))
 # create clock
 
 clock = pygame.time.Clock()
@@ -37,13 +40,13 @@ while running:
         background.fill((lm.level_list[current_level].bg()))
         background.convert()
         # get mouse information
-        Mx,My = pygame.mouse.get_pos()
+        mpos = pygame.mouse.get_pos()
         L,R,C = pygame.mouse.get_pressed()
         # draws the menu image at the middle of the screen
-        screen.blit('../images/Start 1.png', (settings.resolution_x/50 - 144, settings.resolution_y/50 - 144))
+        screen.blit(start1, (gamedata.resolution_x/2 - 144, gamedata.resolution_y/2 - 144))
         # changes menu display if mouse is hovering the start text
-        if 207 < Mx < 351 and 229 < My < 273:
-            screen.blit('../images/Start 2.png', (settings.resolution_x/50 - 144, settings.resolution_y/50 - 144))
+        if start1Rect.collidepoint(mpos):
+            screen.blit(start2, (gamedata.resolution_x/2 - 144, gamedata.resolution_y/2 - 144))
             # checks if the left mouse button has been pressed
             if L:
                 menu = False
