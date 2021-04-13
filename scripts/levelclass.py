@@ -24,21 +24,26 @@ class Level(object):
         for y in range(size):
             for x in range(size):
                 self.tiles.append(tileclass.Tile((x * self.tile_size) + offsets[0],
-                                                 (y * self.tile_size) + offsets[1], tiles[(y * size) + x]))
+                                                 (y * self.tile_size) + offsets[1], tiles[(y * size) + x][0], tiles[(y * size) + x][1]))
 
         for item in objects:
             self.objects.append(objectclass.Object(((item[0] - 1) * self.tile_size) + offsets[0],
                                                    ((item[1] - 1) * self.tile_size) + offsets[1], item[2]))
     def undo(self):
         # triggers an undoing of the most recent move
+        for item in self.tiles:
+            item.back(1)
         for item in self.objects:
             item.back(1)
 
     def restart(self, moves):
         # triggers a full level restart
+        for item in self.tiles:
+            item.back(moves)
         for item in self.objects:
             item.back(moves)
 
+<<<<<<< Updated upstream
         if gamedata.levelmanager is not None:
             gamedata.levelmanager.level_list.append(self)
         else:
@@ -46,13 +51,14 @@ class Level(object):
             gamedata.levelmanager.level_list.append(self)
 
 
+=======
+    def move_detection(self, screen_size):
+        self.objects[0].movement_detection(self.objects, 0, self.tiles, self.tile_size, self.size, self.offsets, screen_size)
+>>>>>>> Stashed changes
 
-    def detection(self, direction, x_change, y_change, screen_size):
-        # triggers the player movement
-        self.objects[0].movement(self.objects, 0, direction, x_change, y_change, self.tiles, self.tile_size, self.size,
-                                 self.offsets, screen_size)
+    def move_cycle(self):
         for item in self.objects:
-            item.update()
+            item.movement()
 
     def bg(self):
         # customizable per level background
