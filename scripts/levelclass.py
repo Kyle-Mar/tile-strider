@@ -26,7 +26,7 @@ class Level(object):
         for y in range(size):
             for x in range(size):
                 self.tiles.append(tileclass.Tile((x * self.tile_size) + offsets[0],
-                                                 (y * self.tile_size) + offsets[1], tiles[(y * size) + x]))
+                                                 (y * self.tile_size) + offsets[1], tiles[(y * size) + x][0], tiles[(y * size) + x][1]))
 
         for item in objects:
             self.objects.append(objectclass.Object(((item[0] - 1) * self.tile_size) + offsets[0],
@@ -41,22 +41,28 @@ class Level(object):
 
     def undo(self):
         # triggers an undoing of the most recent move
+        for item in self.tiles:
+            item.back(1)
         for item in self.objects:
             item.back(1)
 
     def restart(self, moves):
         # triggers a full level restart
+        for item in self.tiles:
+            item.back(moves)
         for item in self.objects:
             item.active = True
             item.back(moves)
 
+    def move_detection(self, screen_size):
+        #triggers detection of if objects can move or not
+        self.objects[0].movement_detection(self.objects, 0, self.tiles, self.tile_size, self.size, self.offsets, screen_size)
 
-    def detection(self, direction, x_change, y_change, screen_size):
-        # triggers the player movement
-        self.objects[0].movement(self.objects, 0, direction, x_change, y_change, self.tiles, self.tile_size, self.size,
-                                 self.offsets, screen_size)
+
+    def move_cycle(self):
+        #moves objects if they are able
         for item in self.objects:
-            item.update()
+            item.movement()
 
     def bg(self):
         # customizable per level background
