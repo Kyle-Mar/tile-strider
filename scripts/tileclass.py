@@ -56,8 +56,6 @@ class Tile(object):
             self.__class__ = Spawn
         elif variant == 9:
             self.__class__ = Void
-<<<<<<< Updated upstream
-=======
     
     def back(self, back_num):
         #reverts the tile's state to a previous one in the state history
@@ -73,7 +71,6 @@ class Tile(object):
     # return TypeException if the superclass function runs instead of subclass function
     def action(self):
         return  # figure out how to return a type exception
->>>>>>> Stashed changes
 
 
 class Pit(Tile):
@@ -92,10 +89,9 @@ class Wall(Tile):
     def __init__(self):
         # creates a wall subclass
         super().__init__()
-<<<<<<< Updated upstream
-=======
 
     def update_state(self, red_on, blue_on):
+        #updates how the wall behaves depending on which colors are on or off
         if self.name == "red_block":
             if red_on:
                 self.state = 1
@@ -120,7 +116,6 @@ class Wall(Tile):
         :return:
         """
         return
->>>>>>> Stashed changes
 
 
 class Goal(Tile):
@@ -133,12 +128,11 @@ class Lever(Tile):
     def __init__(self):
         # creates a lever subclass (includes all variants)
         super().__init__()
-<<<<<<< Updated upstream
-=======
         # variable that tells whether this tile is red, blue, or no color (grey)
         self.type = "grey"
 
     def detect(self, objects):
+        #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered)
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
@@ -149,6 +143,7 @@ class Lever(Tile):
             self.state = 0
 
     def red_swap(self):
+        #returns a boolean that will swap if red is on or off depending on if something triggered the lever
         if (self.type == "red" or self.type == "grey") and self.state == 1:
             if self.type == "red":
                 self.state = 2
@@ -157,6 +152,7 @@ class Lever(Tile):
             return False
 
     def blue_swap(self):
+        #returns a boolean that will swap if blue is on or off depending on if something triggered the lever
         if (self.type == "blue" or self.type == "grey") and self.state == 1:
             self.state = 2
             return True
@@ -185,19 +181,17 @@ class Lever(Tile):
                 Wall.on = not Wall.on   # swaps whatever state the wall is in
             # if object.crate.type == "blue"
                 # object.crate.on = not object.crate.on
->>>>>>> Stashed changes
 
 
 class Button(Tile):
     def __init__(self):
         # creates a button subclass (includes all variants)
         super().__init__()
-<<<<<<< Updated upstream
-=======
         # variable that tells whether this tile is red, blue, or no color (grey)
         self.type = "grey"
 
     def detect(self, objects):
+        #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered)
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
@@ -210,6 +204,7 @@ class Button(Tile):
             self.state = 0
 
     def red_swap(self):
+        #returns a boolean that will swap if red is on or off depending on if something got on or off the button
         if (self.type == "red" or self.type == "grey") and self.state == 1:
             if self.type == "red":
                 self.state = 2
@@ -218,6 +213,7 @@ class Button(Tile):
             return False
 
     def blue_swap(self):
+        #returns a boolean that will swap if blue is on or off depending on if something got on or off the button
         if (self.type == "blue" or self.type == "grey") and self.state == 1:
             self.state = 2
             return True
@@ -246,7 +242,6 @@ class Button(Tile):
                 Wall.on = not Wall.on  # swaps whatever state the wall is in
             # if object.crate.type == "blue"
             # object.crate.on = not object.crate.on
->>>>>>> Stashed changes
 
 
 class Rotator(Tile):
@@ -254,8 +249,6 @@ class Rotator(Tile):
         # creates an arrow rotator subclass (includes all variants)
         super().__init__()
 
-<<<<<<< Updated upstream
-=======
     def detect(self, objects):
         detector = 0
         for item in objects:
@@ -273,15 +266,12 @@ class Rotator(Tile):
         """
         return
 
->>>>>>> Stashed changes
 
 class Arrow(Tile):
     def __init__(self):
         # creates a pushing arrow subclass (includes all variants)
         super().__init__()
 
-<<<<<<< Updated upstream
-=======
     def push_objects(self, objects):
         #put code that checks for objects on the arrow and gives them an appropriate push request here
         return
@@ -292,7 +282,6 @@ class Arrow(Tile):
         """
         return
 
->>>>>>> Stashed changes
 
 class Spawn(Tile):
     def __init__(self):
@@ -304,12 +293,9 @@ class Void(Tile):
     def __init__(self):
         # creates a void so that more unique shapes other than a square can be made
         super().__init__()
-<<<<<<< Updated upstream
-=======
 
     def action(self):
         """
         :return:
         """
         return
->>>>>>> Stashed changes

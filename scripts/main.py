@@ -125,6 +125,7 @@ while running:
     # address interactions
 
     objects_moving = 0
+    #checks which movement state the game is in (0 = nothing moving, 1 = on tiles but stuff still needs to move, 2 = currently moving)
     for item in lm.level_list[current_level].objects:
         if len(item.push_requests) > 0:
             if item.push_requests[0][1] % 5 == 0:
@@ -134,6 +135,7 @@ while running:
             objects_moving += 1
     if objects_moving == 0:
         if moving_state != 0:
+            #triggers the end of the turn (updates position/state histories)
             for item in lm.level_list[current_level].tiles:
                 item.turn_end()
             for item in lm.level_list[current_level].objects:
@@ -141,11 +143,14 @@ while running:
             moves += 1
         moving_state = 0
     if moving_state == 1:
+        #triggers movement detection and execution
         lm.level_list[current_level].move_detection(screen_size)
         lm.level_list[current_level].move_cycle()
+        #activates levers, buttons, or rotators if something is on top of them
         for item in lm.level_list[current_level].tiles:
             if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button or item.__class__ == levels.levelclass.tileclass.Rotator:
                 item.detect(lm.level_list[current_level].objects)
+        #swaps the red and/or blue state from any lever or button interactions
         for item in lm.level_list[current_level].tiles:
             if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button:
                 if item.red_swap():
@@ -158,6 +163,7 @@ while running:
                         blue_on = False
                     else:
                         blue_on = True
+        #updates the crates and walls depending on which colors are on or off and tells objects to be pushed if they're on an arrow
         for item in lm.level_list[current_level].objects:
             if item.__class__ == levels.levelclass.objectclass.Crate:
                 item.update_state(red_on, blue_on)
@@ -167,6 +173,7 @@ while running:
             if item.__class__ == levels.levelclass.tileclass.Arrow:
                 item.push_objects(lm.level_list[current_level].objects)
     elif moving_state == 2:
+        #moves objects if they're currently moving in between tiles
         lm.level_list[current_level].move_cycle()
 
     # draw new screen
@@ -188,6 +195,3 @@ while running:
     pygame.display.flip()
 
 pygame.quit()
-
-##functions needed:
-##    -turn_end for tiles and objects that will add states/positions to history

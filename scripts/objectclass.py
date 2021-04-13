@@ -33,34 +33,13 @@ class Object(object):
         self.y = new_y
 
     def push(self, direction, tiles):
+        #moves an object 1/5 of the way forward (executed 5 times for smooth moving)
         self.push_requests.append([direction, tiles * 5])
 
     def movement_detection(self, object_list, object_index, tile_list, tile_size, grid_size, offsets, screen_size):
         # handles movement of player in the desired direction if possible, as well as making sure crates are pushed
         # correctly by the player and other crates and act solid if pushed against a wall
         for item in object_list:
-<<<<<<< Updated upstream
-            if direction == "up":
-                condition = item.y > offsets[1] and tile_list[
-                    ((round((item.y - offsets[1]) / tile_size) - 1) * grid_size) + round((item.x - offsets[0]) / tile_size)].is_floor
-            elif direction == "down":
-                condition = item.y < ((screen_size[1] - offsets[1]) - tile_size) and tile_list[
-                    ((round((item.y - offsets[1]) / tile_size) + 1) * grid_size) + round((item.x - offsets[0]) / tile_size)].is_floor
-            elif direction == "left":
-                condition = item.x > offsets[0] and tile_list[
-                    (round((item.y - offsets[1]) / tile_size) * grid_size) + (round((item.x - offsets[0]) / tile_size) - 1)].is_floor
-            elif direction == "right":
-                condition = item.x < ((screen_size[0] - offsets[0]) - tile_size) and tile_list[
-                    (round((item.y - offsets[1]) / tile_size) * grid_size) + (round((item.x - offsets[0]) / tile_size) + 1)].is_floor
-            if object_list.index(item) == object_index and condition:
-                for item2 in object_list:
-                    if item2.name == "crate" and round(item.x + x_change) == round(item2.x) and round(item.y + y_change) == round(item2.y):
-                        if object_list[object_list.index(item2)].movement(object_list, object_list.index(item2), direction, x_change, y_change, tile_list,
-                                     tile_size, grid_size, offsets, screen_size):
-                            item.new_coords(item.x + x_change, item.y + y_change)
-                            if item.name == "crate":
-                                return True
-=======
             if len(item.push_requests) != 0:
                 x_change = 0
                 y_change = 0
@@ -91,7 +70,6 @@ class Object(object):
                                     return True
                                 else:
                                     return
->>>>>>> Stashed changes
                             else:
                                 item.push_requests.pop(0)
                                 return
@@ -103,6 +81,7 @@ class Object(object):
                     return False
 
     def movement(self):
+        #handles the movement of an object if said object is able to move
         if self.can_move:
             self.new_coords(self.x + (self.displacement[0] / 5), self.y + (self.displacement[1] / 5))
             self.push_requests[0][1] -= 1
@@ -133,10 +112,9 @@ class Crate(Object):
     def __init__(self, x, y):
         # creates a crate subclass (includes red/blue crates)
         super().__init__(x, y)
-<<<<<<< Updated upstream
-=======
 
     def update_state(self, red_on, blue_on):
+        #updates how the crate behaves depending on which colors are on or off
         if self.type == "red":
             if red_on:
                 self.state = 1
@@ -151,6 +129,3 @@ class Crate(Object):
             else:
                 self.state = 0
                 self.is_anchored = True
-
-
->>>>>>> Stashed changes

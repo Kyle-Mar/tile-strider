@@ -43,20 +43,12 @@ class Level(object):
         for item in self.objects:
             item.back(moves)
 
-<<<<<<< Updated upstream
-        if gamedata.levelmanager is not None:
-            gamedata.levelmanager.level_list.append(self)
-        else:
-            gamedata.levelmanager = levelmanager.LevelManager()
-            gamedata.levelmanager.level_list.append(self)
-
-
-=======
     def move_detection(self, screen_size):
+        #triggers detection of if objects can move or not
         self.objects[0].movement_detection(self.objects, 0, self.tiles, self.tile_size, self.size, self.offsets, screen_size)
->>>>>>> Stashed changes
 
     def move_cycle(self):
+        #moves objects if they are able
         for item in self.objects:
             item.movement()
 
