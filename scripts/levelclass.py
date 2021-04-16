@@ -23,11 +23,13 @@ class Level(object):
         self.moves = 0
         # creates the grid and the lists containing the tiles and objects
 
+        #turns level tile data into tiles
         for y in range(size):
             for x in range(size):
                 self.tiles.append(tileclass.Tile((x * self.tile_size) + offsets[0],
                                                  (y * self.tile_size) + offsets[1], tiles[(y * size) + x][0], tiles[(y * size) + x][1]))
 
+        #turns level object data into objects
         for item in objects:
             self.objects.append(objectclass.Object(((item[0] - 1) * self.tile_size) + offsets[0],
                                                    ((item[1] - 1) * self.tile_size) + offsets[1], item[2]))
@@ -51,13 +53,12 @@ class Level(object):
         for item in self.tiles:
             item.back(moves)
         for item in self.objects:
-            item.active = True
             item.back(moves)
 
     def move_detection(self, screen_size):
         #triggers detection of if objects can move or not
-        self.objects[0].movement_detection(self.objects, 0, self.tiles, self.tile_size, self.size, self.offsets, screen_size)
-
+        for item in self.objects:
+            item.movement_detection(self.objects, self.tiles, self.tile_size, self.size, self.offsets, screen_size, self.objects.index(item))
 
     def move_cycle(self):
         #moves objects if they are able

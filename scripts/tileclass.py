@@ -10,16 +10,28 @@ goal = pygame.image.load('../images/goal.png')
 spawn = pygame.image.load('../images/player_spawn.png')
 lever = pygame.image.load('../images/switch.png')
 button = pygame.image.load('../images/button.png')
-arrow = pygame.image.load('../images/right1.png')
+single_arrow_up = pygame.image.load('../images/up1.png')
 rotator = pygame.image.load('../images/tile_clockwise.png')
 void = pygame.image.load('../images/void.png')
 red_block = pygame.image.load('../images/red_wall.png')
 blue_block = pygame.image.load('../images/blue_wall.png')
 red_block_on = pygame.image.load('../images/red_floor.png')
 blue_block_on = pygame.image.load('../images/blue_floor.png')
+double_arrow_up = pygame.image.load('../images/up2.png')
+max_arrow_up = pygame.image.load('../images/upAll.png')
+single_arrow_right = pygame.image.load('../images/right1.png')
+single_arrow_down = pygame.image.load('../images/down1.png')
+single_arrow_left = pygame.image.load('../images/left1.png')
+double_arrow_right = pygame.image.load('../images/right2.png')
+double_arrow_down = pygame.image.load('../images/down2.png')
+double_arrow_left = pygame.image.load('../images/left2.png')
+max_arrow_right = pygame.image.load('../images/rightAll.png')
+max_arrow_down = pygame.image.load('../images/downAll.png')
+max_arrow_left = pygame.image.load('../images/leftAll.png')
 
-tileset = [pit, floor, wall, lever, button, arrow, rotator, goal, spawn, void, red_block, blue_block]
-nameset = ["pit", "floor", "wall", "lever", "button", "arrow", "rotator", "goal", "spawn", "void", "red_block", "blue_block"]
+tileset = [pit, floor, wall, lever, button, single_arrow_up, rotator, goal, spawn, void, red_block, blue_block, double_arrow_up, max_arrow_up]
+nameset = ["pit", "floor", "wall", "lever", "button", "single_arrow", "rotator", "goal", "spawn", "void", "red_block", "blue_block", "double_arrow", "max_arrow"]
+arrowset = [single_arrow_up, single_arrow_right, single_arrow_down, single_arrow_left, double_arrow_up, double_arrow_right, double_arrow_down, double_arrow_left, max_arrow_up, max_arrow_right, max_arrow_down, max_arrow_left]
 
 # variable to access player object
 
@@ -37,7 +49,7 @@ class Tile(object):
         # restart is triggered once tile functionality and different states are implemented
 
         self.is_floor = ""
-        if self.name == "pit" or self.name == "wall" or self.name == "void":
+        if self.name == "wall":
             self.is_floor = False
         else:
             self.is_floor = True
@@ -52,6 +64,14 @@ class Tile(object):
         elif variant == 4:
             self.__class__ = Button
         elif variant == 5:
+            #updates the visuals for the arrows based on their type and state (faster solution than to make a seperate variant for all 12 of them)
+            if self.name == "single_arrow":
+                strength = 0
+            elif self.name == "double_arrow":
+                strength = 1
+            elif self.name == "max_arrow":
+                strength = 2
+            self.surface = arrowset[self.state + (strength * 4)]
             self.__class__ = Arrow
         elif variant == 6:
             self.__class__ = Rotator
@@ -87,7 +107,15 @@ class Tile(object):
 class Pit(Tile):
     def __init__(self):
         # creates a pit subclass
-        super().__init__()        
+        super().__init__()
+
+    def fall_objects(self, objects):
+        #makes any object on top of it fall into the pit
+        #checks if there's an object on top
+        for item in objects:
+            if round(item.x) == round(self.x) and round(item.y) == round(self.y) and len(item.push_requests) == 0 and item.is_active:
+                #sends falling push request
+                item.push("fall", 1)
 
     def action(self, object):
         """
@@ -105,7 +133,7 @@ class Pit(Tile):
 
 class Floor(Tile):
     def __init__(self):
-        # creates a floor subclass (includes spawn platform and red/blue blocks)
+        # creates a floor subclass (includes spawn platform)
         super().__init__()
 
     def action(self, object):
@@ -123,12 +151,6 @@ class Wall(Tile):
         self.type = "grey"
         # for colored tiles, tells if tile should be an active wall or not
         self.on = True
-
-    def action(self, object):
-        """
-        :return:
-        """
-        return
 
     def update_state(self, red_on, blue_on):
         #updates how the wall behaves depending on which colors are on or off
@@ -174,18 +196,14 @@ class Lever(Tile):
     def __init__(self):
         # creates a lever subclass (includes all variants)
         super().__init__()
-        # variable that tells whether this tile is red, blue, or no color (grey)
-        self.type = "grey"
-
-<<<<<<< HEAD
-    def action(self, object):
-=======
 
     def detect(self, objects):
         #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered)
+        #checks if an object is on top
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
+                #if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
                 detector = 1
                 if self.state == 0:
                     self.state = 1
@@ -194,8 +212,8 @@ class Lever(Tile):
 
     def red_swap(self):
         #returns a boolean that will swap if red is on or off depending on if something triggered the lever
-        if (self.type == "red" or self.type == "grey") and self.state == 1:
-            if self.type == "red":
+        if (self.name == "red_lever" or self.name == "lever") and self.state == 1:
+            if self.name == "red_lever":
                 self.state = 2
             return True
         else:
@@ -203,115 +221,72 @@ class Lever(Tile):
 
     def blue_swap(self):
         #returns a boolean that will swap if blue is on or off depending on if something triggered the lever
-        if (self.type == "blue" or self.type == "grey") and self.state == 1:
+        if (self.name == "blue_lever" or self.name == "lever") and self.state == 1:
             self.state = 2
             return True
         else:
             return False
-
-    def action(self):
->>>>>>> main
-        """
-        :return:
-        """
-        # change all if grey
-        if self.type == "grey":
-            Wall.on = not Wall.on
-            # object.crate.on = not object.crate.on
-
-        # change on Red tiles when switch is Red
-        elif self.type == "red":
-            if Wall.type == "red":
-                Wall.on = not Wall.on   # swaps whatever state the wall is in
-            # if object.crate.type == "red"
-                # object.crate.on = not object.crate.on
-
-        # change only blue tiles when switch is blue
-        elif self.type == "blue":
-            if Wall.type == "blue":
-                Wall.on = not Wall.on   # swaps whatever state the wall is in
-            # if object.crate.type == "blue"
-                # object.crate.on = not object.crate.on
 
 
 class Button(Tile):
     def __init__(self):
         # creates a button subclass (includes all variants)
         super().__init__()
-        # variable that tells whether this tile is red, blue, or no color (grey)
-        self.type = "grey"
 
-<<<<<<< HEAD
-    def action(self, object):
-=======
     def detect(self, objects):
-        #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered)
+        #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered,
+        #3 is no object but color swap needs to be triggered)
+        #checks if an object is on top
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
+                #if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
                 detector = 1
                 if self.state == 0:
                     self.state = 1
+        #swaps again if the object on top gets off
         if detector == 0 and self.state == 2:
-            self.state = 1
+            self.state = 3
         elif detector == 0:
             self.state = 0
 
     def red_swap(self):
         #returns a boolean that will swap if red is on or off depending on if something got on or off the button
-        if (self.type == "red" or self.type == "grey") and self.state == 1:
-            if self.type == "red":
-                self.state = 2
+        if (self.name == "red_button" or self.name == "button") and (self.state == 1 or self.state == 3):
+            if self.name == "red_button":
+                if self.state == 1:
+                    self.state = 2
+                else:
+                    self.state = 0
             return True
         else:
             return False
 
     def blue_swap(self):
         #returns a boolean that will swap if blue is on or off depending on if something got on or off the button
-        if (self.type == "blue" or self.type == "grey") and self.state == 1:
-            self.state = 2
+        if (self.name == "blue_button" or self.name == "button") and (self.state == 1 or self.state == 3):
+            if self.state == 1:
+                self.state = 2
+            else:
+                self.state = 0
             return True
         else:
             return False
         
-    def action(self):
->>>>>>> main
-        """
-        :return:
-        """
-        # change all if grey
-        if self.type == "grey":
-            Wall.on = not Wall.on
-            # object.crate.on = not object.crate.on
-
-        # change on Red tiles when switch is Red
-        elif self.type == "red":
-            if Wall.type == "red":
-                Wall.on = not Wall.on  # swaps whatever state the wall is in
-            # if object.crate.type == "red"
-            # object.crate.on = not object.crate.on
-
-        # change only blue tiles when switch is blue
-        elif self.type == "blue":
-            if Wall.type == "blue":
-                Wall.on = not Wall.on  # swaps whatever state the wall is in
-            # if object.crate.type == "blue"
-            # object.crate.on = not object.crate.on
-
 
 class Rotator(Tile):
     def __init__(self):
         # creates an arrow rotator subclass (includes all variants)
         super().__init__()
 
-<<<<<<< HEAD
-    def action(self, object):
-=======
     def detect(self, objects):
+        #detects if an object is on top of it and changes the direction of surrounding arrows accordingly
+        #checks for objects on top
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
                 detector = 1
+        #changes directions of surrounding arrows
         if detector == 1 and self.state == 0:
             self.state = 1
             #put code that checks for adjacent arrows and changes their direction here
@@ -319,7 +294,6 @@ class Rotator(Tile):
             self.state = 0
                 
     def action(self):
->>>>>>> main
         """
         :return:
         """
@@ -330,16 +304,42 @@ class Arrow(Tile):
     def __init__(self):
         # creates a pushing arrow subclass (includes all variants)
         super().__init__()
+        
+    def update_direction(self):
+        #updates the surface and direction of the arrow tile depending on the type and state
+        #put code for changing direction from rotators here
+        if self.name == "single_arrow":
+            strength = 0
+        elif self.name == "double_arrow":
+            strength = 1
+        elif self.name == "max_arrow":
+            strength = 2
+        self.surface = arrowset[self.state + (strength * 4)]
 
-<<<<<<< HEAD
-    def action(self, object):
-=======
     def push_objects(self, objects):
-        #put code that checks for objects on the arrow and gives them an appropriate push request here
-        return
+        #sends a push request to any objects on top of it based on its type and state
+        #changes direction of push request based on state
+        direction = ""
+        if self.state == 0:
+            direction = "up"
+        elif self.state == 1:
+            direction = "right"
+        elif self.state == 2:
+            direction = "down"
+        elif self.state == 3:
+            direction = "left"
+        #checks for objects on top
+        for item in objects:
+            if round(item.x) == round(self.x) and round(item.y) == round(self.y) and not item.is_anchored:
+                #sends push request
+                if self.name == "single_arrow":
+                    item.push(direction, 1)
+                if self.name == "double_arrow":
+                    item.push(direction, 2)
+                if self.name == "max_arrow":
+                    item.push(direction, 20)
 
     def action(self):
->>>>>>> main
         """
         :return:
         """

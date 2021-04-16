@@ -21,15 +21,13 @@ FPS = gamedata.fps
 
 # temporary. ideally here, we create a level manager
 lm = gamedata.levelmanager
-<<<<<<< HEAD
 current_level = lm.current_level
-=======
-current_level = 0
 moves = 0
 red_on = False
 blue_on = False
+color_history = [[red_on, blue_on]]
 moving_state = 0
->>>>>>> main
+
 # create game loop
 
 running = True
@@ -81,65 +79,44 @@ while running:
         # move player
 
         if event.type == pygame.KEYDOWN:
-<<<<<<< HEAD
-            if event.key == pygame.K_UP:
-                lm.level_list[current_level].detection("up", 0, 0 - lm.level_list[current_level].tile_size, screen_size)
-                lm.level_list[current_level].moves += 1
-            if event.key == pygame.K_DOWN:
-                lm.level_list[current_level].detection("down", 0, lm.level_list[current_level].tile_size, screen_size)
-                lm.level_list[current_level].moves += 1
-            if event.key == pygame.K_LEFT:
-                lm.level_list[current_level].detection("left", 0 - lm.level_list[current_level].tile_size, 0, screen_size)
-                lm.level_list[current_level].moves += 1
-            if event.key == pygame.K_RIGHT:
-                lm.level_list[current_level].detection("right", lm.level_list[current_level].tile_size, 0, screen_size)
-                lm.level_list[current_level].moves += 1
-            if event.key == pygame.K_u and lm.level_list[current_level].moves > 0:
-                lm.level_list[current_level].undo()
-                lm.level_list[current_level].moves -= 1
-            if event.key == pygame.K_r:
-                lm.level_list[current_level].restart(lm.level_list[current_level].moves)
-                lm.level_list[current_level].moves = 0
-=======
+            #exit game if esc is pressed
             if event.key == pygame.K_ESCAPE:
                 running = False
+                print(moves)
+            #make sure nothing is moving before moving things
             if moving_state == 0:
+                #restart the level if r is pressed
                 if event.key == pygame.K_r:
                     lm.level_list[current_level].restart(moves)
+                    for i in range(len(color_history) - 1):
+                        color_history.pop(-1)
+                    red_on = color_history[-1][0]
+                    blue_on = color_history[-1][1]
+                    moving_state = 4
                     moves = 0
+                #undo 1 move if u is pressed and at least 1 move has been made
                 if event.key == pygame.K_u and moves > 0:
                     lm.level_list[current_level].undo()
+                    if len(color_history) > 1:
+                        color_history.pop(-1)
+                        red_on = color_history[-1][0]
+                        blue_on = color_history[-1][1]
+                    moving_state = 4
                     moves -= 1
-                if event.key == pygame.K_UP:
-                    lm.level_list[current_level].objects[0].push("up", 1)
-                if event.key == pygame.K_DOWN:
-                    lm.level_list[current_level].objects[0].push("down", 1)
-                if event.key == pygame.K_LEFT:
-                    lm.level_list[current_level].objects[0].push("left", 1)
-                if event.key == pygame.K_RIGHT:
-                    lm.level_list[current_level].objects[0].push("right", 1)
->>>>>>> main
-            if event.key == pygame.K_d:
-                #debugging command, remove in final build
-                print(lm.level_list[current_level].objects[1].position_history)
-<<<<<<< HEAD
-            if event.key == pygame.K_ESCAPE:
-                running = False
-=======
-                print(moves)
-            if event.key == pygame.K_e:
-                #debugging command, remove in final build
-                if red_on:
-                    red_on = False
-                else:
-                    red_on = True
-            if event.key == pygame.K_b:
-                #debugging command, remove in final build
-                if blue_on:
-                    blue_on = False
-                else:
-                    blue_on = True
->>>>>>> main
+                #make sure the player isn't in a pit before moving them
+                if lm.level_list[current_level].objects[0].is_active:
+                    #move the player up 1 tile if able
+                    if event.key == pygame.K_UP:
+                        lm.level_list[current_level].objects[0].push("up", 1)
+                    #move the player down 1 tile if able
+                    if event.key == pygame.K_DOWN:
+                        lm.level_list[current_level].objects[0].push("down", 1)
+                    #move the player left 1 tile if able
+                    if event.key == pygame.K_LEFT:
+                        lm.level_list[current_level].objects[0].push("left", 1)
+                    #move the player right 1 tile if able
+                    if event.key == pygame.K_RIGHT:
+                        lm.level_list[current_level].objects[0].push("right", 1)
             if event.key == pygame.K_1:
                 current_level = 0
             elif event.key == pygame.K_2:
@@ -154,52 +131,43 @@ while running:
                 current_level = 5
             elif event.key == pygame.K_7:
                 current_level = 6
-
-<<<<<<< HEAD
-        # draw new screen
-
-        screen.blit(background, (0, 0))
-
-        # update the level to the screen
-
-        for i in range(len(lm.level_list[current_level].tiles)):
-            screen.blit(pygame.transform.scale(lm.level_list[current_level].tiles[i].surface,
-                                              (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
-                       (round(lm.level_list[current_level].tiles[i].x), round(lm.level_list[current_level].tiles[i].y)))
-        for i in range(len(lm.level_list[current_level].objects)):
-            #check if object is active otherwise don't render
-            if lm.level_list[current_level].objects[i].active:
-                screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
-                                                  (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
-                           (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
-
-        clock.tick(FPS)
-        pygame.display.flip()
-=======
+        
     # address interactions
 
-    objects_moving = 0
-    #checks which movement state the game is in (0 = nothing moving, 1 = on tiles but stuff still needs to move, 2 = currently moving)
-    for item in lm.level_list[current_level].objects:
-        if len(item.push_requests) > 0:
-            if item.push_requests[0][1] % 5 == 0:
-                moving_state = 1
-            else:
-                moving_state = 2
-            objects_moving += 1
-    if objects_moving == 0:
-        if moving_state != 0:
-            #triggers the end of the turn (updates position/state histories)
-            for item in lm.level_list[current_level].tiles:
-                item.turn_end()
-            for item in lm.level_list[current_level].objects:
-                item.turn_end()
-            moves += 1
-        moving_state = 0
-    if moving_state == 1:
-        #triggers movement detection and execution
-        lm.level_list[current_level].move_detection(screen_size)
-        lm.level_list[current_level].move_cycle()
+    objects_moving = False
+    #checks which movement state the game is in (0 = nothing moving, 1 = on tiles but stuff still needs to move, 2 = currently moving,
+    #3 = checking tiles after done moving, 4 = 3 but skips setter (for the undo function))
+    #make sure an undo wasn't requested before setting the movement state
+    if not moving_state == 4:
+        #sets up for a tile action check if objects are on tiles, otherwise continues moving them
+        for item in lm.level_list[current_level].objects:
+            if len(item.push_requests) > 0:
+                if item.push_requests[0][1] % 5 == 0:
+                    moving_state = 1
+                else:
+                    moving_state = 2
+                objects_moving = True
+        #continues to the next step if nothing needs to move
+        if not objects_moving:
+            if moving_state == 1:
+                moving_state = 0
+            if moving_state == 2:
+                moving_state = 3
+            elif moving_state == 3:
+                #triggers the end of the turn (updates position/state histories)
+                for item in lm.level_list[current_level].tiles:
+                    item.turn_end()
+                for item in lm.level_list[current_level].objects:
+                    item.turn_end()
+                color_history.append([red_on, blue_on])
+                moves += 1
+                moving_state = 0
+    #checks if tiles that perform functions have an object on them and preforms said function if so
+    if moving_state == 1 or moving_state == 3 or moving_state == 4:
+        if moving_state == 1:
+            #triggers movement detection and execution
+            lm.level_list[current_level].move_detection(screen_size)
+            lm.level_list[current_level].move_cycle()
         #activates levers, buttons, or rotators if something is on top of them
         for item in lm.level_list[current_level].tiles:
             if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button or item.__class__ == levels.levelclass.tileclass.Rotator:
@@ -217,7 +185,8 @@ while running:
                         blue_on = False
                     else:
                         blue_on = True
-        #updates the crates and walls depending on which colors are on or off and tells objects to be pushed if they're on an arrow
+        #updates the crates and walls depending on which colors are on or off, tells objects to be pushed if they're on an arrow,
+        #and tells objects to fall if they're on a pit
         for item in lm.level_list[current_level].objects:
             if item.__class__ == levels.levelclass.objectclass.Crate:
                 item.update_state(red_on, blue_on)
@@ -226,27 +195,34 @@ while running:
                 item.update_state(red_on, blue_on)
             if item.__class__ == levels.levelclass.tileclass.Arrow:
                 item.push_objects(lm.level_list[current_level].objects)
+            if item.__class__ == levels.levelclass.tileclass.Pit:
+                item.fall_objects(lm.level_list[current_level].objects)
+        #ends the update chain if it was just for an undo
+        if moving_state == 4:
+            moving_state = 0
     elif moving_state == 2:
-        #moves objects if they're currently moving in between tiles
+        #moves objects if they're currently in between tiles
         lm.level_list[current_level].move_cycle()
 
     # draw new screen
-            
+
     screen.blit(background, (0, 0))
 
     # update the level to the screen
 
     for i in range(len(lm.level_list[current_level].tiles)):
         screen.blit(pygame.transform.scale(lm.level_list[current_level].tiles[i].surface,
-                                            (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
-                    (round(lm.level_list[current_level].tiles[i].x), round(lm.level_list[current_level].tiles[i].y)))
+                                          (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
+                   (round(lm.level_list[current_level].tiles[i].x), round(lm.level_list[current_level].tiles[i].y)))
     for i in range(len(lm.level_list[current_level].objects)):
-        screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
-                                            (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
-                    (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
+        #check if object is active otherwise don't render
+        if lm.level_list[current_level].objects[i].is_active:
+            screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
+                                              (math.ceil(lm.level_list[current_level].tile_size * lm.level_list[current_level].objects[i].size),
+                                               math.ceil(lm.level_list[current_level].tile_size * lm.level_list[current_level].objects[i].size))),
+                       (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
 
     clock.tick(FPS)
     pygame.display.flip()
->>>>>>> main
 
 pygame.quit()
