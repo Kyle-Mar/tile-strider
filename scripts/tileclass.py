@@ -84,9 +84,12 @@ class Tile(object):
     
     def back(self, back_num):
         #reverts the tile's state to a previous one in the state history
-        self.state = self.state_history[len(self.state_history) - back_num - 1]
-        for i in range(back_num):
-            self.state_history.pop(-1)
+        if len(self.state_history) != 0:
+            self.state = self.state_history[len(self.state_history) - back_num - 1]
+            if back_num > len(self.state_history):
+                print('hello')
+            for i in range(back_num):
+                self.state_history.pop(-1)
             
     def turn_end(self):
         self.state_history.append(self.state)
@@ -185,12 +188,24 @@ class Goal(Tile):
         #creates an exit subclass
         super().__init__()
 
-    def action(self, object):
+    def detect(self, objects):
         """
         increments current_level
         :return:
         """
-        gamedata.levelmanager.current_level += 1
+        for item in objects:
+            if round(item.x) == round(self.x) and round(item.y) == round(self.y):
+                if type(item) == objectclass.Player:
+                    #create non updating versoin
+                    moves = gamedata.levelmanager.moves
+                    #reset previous level
+                    gamedata.levelmanager.level_list[gamedata.levelmanager.current_level].restart(moves)
+                    #change to the new level
+                    gamedata.levelmanager.current_level += 1
+                    #cancel all movements
+                    gamedata.levelmanager.moving_state = 0
+                    #reset move counter
+                    gamedata.levelmanager.moves = 0
 
 class Lever(Tile):
     def __init__(self):

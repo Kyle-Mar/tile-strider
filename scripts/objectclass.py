@@ -70,21 +70,19 @@ class Object(object):
             #checks if the object is able to move to the next tile and sets where it needs to go
             x_change = 0
             y_change = 0
+            #using desired tile to make it easier to read
+            future_tile = self.desired_tile(self.push_requests[0][0], offsets, tile_list, tile_size, grid_size)
             if self.push_requests[0][0] == "up":
-                condition = self.y > offsets[1] and tile_list[
-                    ((round((self.y - offsets[1]) / tile_size) - 1) * grid_size) + round((self.x - offsets[0]) / tile_size)].is_floor
+                condition = self.y > offsets[1] and future_tile.is_floor
                 y_change = 0 - tile_size
             elif self.push_requests[0][0] == "down":
-                condition = self.y < ((screen_size[1] - offsets[1]) - tile_size) and tile_list[
-                    ((round((self.y - offsets[1]) / tile_size) + 1) * grid_size) + round((self.x - offsets[0]) / tile_size)].is_floor
+                condition = self.y < ((screen_size[1] - offsets[1]) - tile_size) and future_tile.is_floor
                 y_change = tile_size
             elif self.push_requests[0][0] == "left":
-                condition = self.x > offsets[0] and tile_list[
-                    (round((self.y - offsets[1]) / tile_size) * grid_size) + (round((self.x - offsets[0]) / tile_size) - 1)].is_floor
+                condition = self.x > offsets[0] and future_tile.is_floor
                 x_change = 0 - tile_size
             elif self.push_requests[0][0] == "right":
-                condition = self.x < ((screen_size[0] - offsets[0]) - tile_size) and tile_list[
-                    (round((self.y - offsets[1]) / tile_size) * grid_size) + (round((self.x - offsets[0]) / tile_size) + 1)].is_floor
+                condition = self.x < ((screen_size[0] - offsets[0]) - tile_size) and future_tile.is_floor
                 x_change = tile_size
             elif self.push_requests[0][0] == "fall":
                 #ends detection if the object needs to fall into a pit since that doesn't require any detection
