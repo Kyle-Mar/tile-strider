@@ -4,12 +4,27 @@ import gamedata
 
 offset = gamedata.screen_offset
 
+# LEVEL CREATION GUIDE
+# tile entries go first in a square grid (in one list), then objects (in one list), then the background color (RGB format), then offset
+# for each tile entry, the first number in the list is which tile it is and the second number is its state
+# the first object entry must be the player
+# for each object entry, the first number is the column it is in (from the left), the second number is the row it is in (from the top), and the third number is which object it is
+# TILE INDEX LIST
+# 0 = Pit, 1 = Floor, 2 = Wall, 7 = Goal, 8 = Spawn, 9 = Void
+# 3 = Lever, 12 = Red Lever, 13 = Blue Lever, 4 = Button, 14 = Red Button, 15 = Blue Button
+# 5 = Arrow, 16 = Double Arrow, 17 = Max Arrow (state: 0 = up, 1 = right, 2 = down, 3 = left)
+# 6 = Clockwise Rotator, 18 = Counterclockwise Rotator, 19 = Flip Rotator (state: 0 = rotate adjacent, 1 = rotate globally)
+# OBJECT INDEX LIST
+# 0 = Player, 1 = Crate, 2 = Red Crate, 3 = Blue Crate
+# the only tiles that should start with a state other than 0 are the arrows and rotators
+
+
 level50 = levelclass.Level(8, [[2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [9, 0],
                                [2, 0], [8, 0], [1, 0], [10, 0], [11, 0], [1, 0], [2, 0], [9, 0],
                                [2, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [2, 0], [9, 0],
-                               [2, 0], [3, 0], [2, 0], [1, 0], [0, 0], [0, 0], [2, 0], [9, 0],
-                               [2, 0], [4, 0], [1, 0], [5, 1], [1, 0], [1, 0], [2, 0], [9, 0],
-                               [2, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [2, 0], [9, 0],
+                               [2, 0], [3, 0], [2, 0], [12, 0], [0, 0], [0, 0], [2, 0], [9, 0],
+                               [2, 0], [4, 0], [18, 0], [17, 1], [1, 0], [1, 0], [2, 0], [9, 0],
+                               [2, 0], [1, 0], [1, 0], [19, 0], [1, 0], [6, 1], [2, 0], [9, 0],
                                [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [9, 0],
                                [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0]], [[2, 2, 0], [5, 3, 2]], (0, 0, 0), offset)
 

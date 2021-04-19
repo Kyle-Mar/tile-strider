@@ -179,14 +179,13 @@ while running:
                 lm.moving_state = 0
     #checks if tiles that perform functions have an object on them and preforms said function if so
     if lm.moving_state == 1 or lm.moving_state == 3 or lm.moving_state == 4:
-        if lm.moving_state == 1:
-            #triggers movement detection and execution
-            lm.level_list[current_level].move_detection(screen_size)
-            lm.level_list[current_level].move_cycle()
         #activates levers, buttons, or rotators if something is on top of them
         for item in lm.level_list[current_level].tiles:
             if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button or item.__class__ == levels.levelclass.tileclass.Rotator or item.__class__ == levels.levelclass.tileclass.Goal:
-                item.detect(lm.level_list[current_level].objects)
+                if item.__class__ == levels.levelclass.tileclass.Rotator:
+                    item.detect(lm.level_list[current_level].objects, lm.level_list[current_level].tiles, lm.level_list[current_level].size)
+                else:
+                    item.detect(lm.level_list[current_level].objects)
         #swaps the red and/or blue state from any lever or button interactions
         for item in lm.level_list[current_level].tiles:
             if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button:
@@ -212,8 +211,12 @@ while running:
                 item.push_objects(lm.level_list[current_level].objects)
             if item.__class__ == levels.levelclass.tileclass.Pit:
                 item.fall_objects(lm.level_list[current_level].objects)
-        #ends the update chain if it was just for an undo
+        if lm.moving_state == 1:
+            #triggers movement detection and execution
+            lm.level_list[current_level].move_detection(screen_size)
+            lm.level_list[current_level].move_cycle()
         if lm.moving_state == 4:
+            #ends the update chain if it was just for an undo
             lm.moving_state = 0
     elif lm.moving_state == 2:
         #moves objects if they're currently in between tiles
