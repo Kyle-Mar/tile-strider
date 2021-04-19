@@ -1,0 +1,19 @@
+tutorial.wav
+ - Song Name: Collin's Song
+ - Composer: Collin Sterling
+
+menu.wav
+ - Song Name: Tile Beat
+ - Composer: William Lewis
+
+easylevel.wav
+ - Song Name: Decent Stroll Through a Dungeon
+ - Composer: William Lewis
+
+mediumlevel.wav
+ - Song Name: Thinker's Groove
+ - Composer: William Lewis
+
+hardlevel.wav
+ - Song Name: Strider Heat (including Spicy Beat)
+ - Composer: William Lewis
