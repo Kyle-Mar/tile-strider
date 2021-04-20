@@ -55,6 +55,13 @@ class Level(object):
         for item in self.objects:
             item.back(moves)
 
+    def go_back(self):
+        # triggers going back to the original position if the undo button is pressed while objects are moving
+        for item in self.tiles:
+            item.back(0)
+        for item in self.objects:
+            item.back(0)
+
     def move_detection(self, screen_size):
         #triggers detection of if objects can move or not
         for item in self.objects:

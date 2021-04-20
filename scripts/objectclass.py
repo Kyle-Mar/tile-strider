@@ -160,6 +160,11 @@ class Object(object):
         for i in range(back_num):
             self.position_history.pop(-1)
             self.state_history.pop(-1)
+        self.push_requests = []
+        self.size = 1
+        self.can_move = False
+        self.displacements = []
+        self.push_requests = []
 
     def turn_end(self):
         #adds an entry to the position history list after the player moves

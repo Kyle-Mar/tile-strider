@@ -91,40 +91,43 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
                 print(moves)
-            #make sure nothing is moving before moving things
-            if lm.moving_state == 0:
-                #restart the level if r is pressed
-                if event.key == pygame.K_r:
-                    lm.level_list[current_level].restart(moves)
-                    for i in range(len(color_history) - 1):
-                        color_history.pop(-1)
-                    red_on = color_history[-1][0]
-                    blue_on = color_history[-1][1]
-                    lm.moving_state = 4
-                    lm.moves = 0
-                #undo 1 move if u is pressed and at least 1 move has been made
-                if event.key == pygame.K_u and moves > 0:
+            #restart the level if r is pressed
+            if event.key == pygame.K_r:
+                lm.level_list[current_level].restart(moves)
+                for i in range(len(color_history) - 1):
+                    color_history.pop(-1)
+                red_on = color_history[-1][0]
+                blue_on = color_history[-1][1]
+                lm.moving_state = 4
+                lm.moves = 0
+            #undo 1 move if u is pressed and at least 1 move has been made
+            if event.key == pygame.K_u and moves > 0:
+                if lm.moving_state == 0:
                     lm.level_list[current_level].undo()
                     if len(color_history) > 1:
                         color_history.pop(-1)
                         red_on = color_history[-1][0]
                         blue_on = color_history[-1][1]
-                    lm.moving_state = 4
-                    lm.moves -= 1
-                #make sure the player isn't in a pit before moving them
-                if lm.level_list[current_level].objects[0].is_active:
-                    #move the player up 1 tile if able
-                    if event.key == pygame.K_UP:
-                        lm.level_list[current_level].objects[0].push("up", 1)
-                    #move the player down 1 tile if able
-                    if event.key == pygame.K_DOWN:
-                        lm.level_list[current_level].objects[0].push("down", 1)
-                    #move the player left 1 tile if able
-                    if event.key == pygame.K_LEFT:
-                        lm.level_list[current_level].objects[0].push("left", 1)
-                    #move the player right 1 tile if able
-                    if event.key == pygame.K_RIGHT:
-                        lm.level_list[current_level].objects[0].push("right", 1)
+                else:
+                    lm.level_list[current_level].go_back()
+                    red_on = color_history[-1][0]
+                    blue_on = color_history[-1][1]
+                lm.moving_state = 4
+                lm.moves -= 1
+            #make sure the player isn't moving and isn't in a pit before moving them
+            if lm.moving_state == 0 and lm.level_list[current_level].objects[0].is_active:
+                #move the player up 1 tile if able
+                if event.key == pygame.K_UP:
+                    lm.level_list[current_level].objects[0].push("up", 1)
+                #move the player down 1 tile if able
+                if event.key == pygame.K_DOWN:
+                    lm.level_list[current_level].objects[0].push("down", 1)
+                #move the player left 1 tile if able
+                if event.key == pygame.K_LEFT:
+                    lm.level_list[current_level].objects[0].push("left", 1)
+                #move the player right 1 tile if able
+                if event.key == pygame.K_RIGHT:
+                    lm.level_list[current_level].objects[0].push("right", 1)
             if event.key == pygame.K_1 and lm.current_level != 0:
                 lm.current_level = 0
                 lm.moves = 0
