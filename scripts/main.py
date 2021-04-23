@@ -1,4 +1,5 @@
 import pygame
+pygame.init()
 import gamedata
 import levels
 # do not remove ^
@@ -6,7 +7,6 @@ import math
 
 # initialize pygame window
 
-pygame.init()
 screen_size = gamedata.screen_size
 screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
@@ -15,6 +15,7 @@ start2 = pygame.image.load("../images/Start 2.png")
 menu_background = pygame.image.load("../images/Menu.png")
 #rectangle of image at position where the image will be placed
 start1Rect = start1.get_rect(center=((gamedata.resolution_x/2, gamedata.resolution_y/2)))
+
 # create clock
 
 clock = pygame.time.Clock()
@@ -26,7 +27,7 @@ current_level = lm.current_level
 red_on = False
 blue_on = False
 color_history = [[red_on, blue_on]]
-lm.moving_state = 0
+lm.moving_state = 4
 
 # create game loop
 
@@ -91,6 +92,16 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
                 print(moves)
+            #skip the level
+            if event.key == pygame.K_s:
+                lm.level_list[current_level].restart(moves)
+                for i in range(len(color_history) - 1):
+                    color_history.pop(-1)
+                red_on = color_history[-1][0]
+                blue_on = color_history[-1][1]
+                lm.moving_state = 5
+                lm.moves = 0
+                gamedata.levelmanager.current_level += 1
             #restart the level if r is pressed
             if event.key == pygame.K_r:
                 lm.level_list[current_level].restart(moves)
@@ -154,7 +165,7 @@ while running:
 
     objects_moving = False
     #checks which movement state the game is in (0 = nothing moving, 1 = on tiles but stuff still needs to move, 2 = currently moving,
-    #3 = checking tiles after done moving, 4 = 3 but skips setter (for the undo function))
+    #3 = checking tiles after done moving, 4 = 3 but skips setter (for the undo function), 5 = next level triggered (always goes to 4))
     #make sure an undo wasn't requested before setting the movement state
     if not lm.moving_state == 4:
         #sets up for a tile action check if objects are on tiles, otherwise continues moving them
@@ -169,7 +180,7 @@ while running:
         if not objects_moving:
             if lm.moving_state == 1:
                 lm.moving_state = 0
-            if lm.moving_state == 2:
+            elif lm.moving_state == 2:
                 lm.moving_state = 3
             elif lm.moving_state == 3:
                 #triggers the end of the turn (updates position/state histories)
@@ -180,11 +191,13 @@ while running:
                 color_history.append([red_on, blue_on])
                 lm.moves += 1
                 lm.moving_state = 0
+            elif lm.moving_state == 5:
+                lm.moving_state = 4
     #checks if tiles that perform functions have an object on them and preforms said function if so
     if lm.moving_state == 1 or lm.moving_state == 3 or lm.moving_state == 4:
         #activates levers, buttons, or rotators if something is on top of them
         for item in lm.level_list[current_level].tiles:
-            if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button or item.__class__ == levels.levelclass.tileclass.Rotator or item.__class__ == levels.levelclass.tileclass.Goal:
+            if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button or item.__class__ == levels.levelclass.tileclass.Rotator:
                 if item.__class__ == levels.levelclass.tileclass.Rotator:
                     item.detect(lm.level_list[current_level].objects, lm.level_list[current_level].tiles, lm.level_list[current_level].size)
                 else:
@@ -211,9 +224,21 @@ while running:
             if item.__class__ == levels.levelclass.tileclass.Wall:
                 item.update_state(red_on, blue_on)
             if item.__class__ == levels.levelclass.tileclass.Arrow:
+                item.update_direction(0)
                 item.push_objects(lm.level_list[current_level].objects)
             if item.__class__ == levels.levelclass.tileclass.Pit:
                 item.fall_objects(lm.level_list[current_level].objects)
+        for item in lm.level_list[current_level].tiles:
+            if item.__class__ == levels.levelclass.tileclass.Goal:
+                if item.next_level(lm.level_list[current_level].objects):
+                    lm.level_list[current_level].restart(moves)
+                    for i in range(len(color_history) - 1):
+                        color_history.pop(-1)
+                    red_on = color_history[-1][0]
+                    blue_on = color_history[-1][1]
+                    lm.moving_state = 5
+                    lm.moves = 0
+                    gamedata.levelmanager.current_level += 1
         if lm.moving_state == 1:
             #triggers movement detection and execution
             lm.level_list[current_level].move_detection(screen_size)
@@ -242,6 +267,7 @@ while running:
                                               (math.ceil(lm.level_list[current_level].tile_size * lm.level_list[current_level].objects[i].size),
                                                math.ceil(lm.level_list[current_level].tile_size * lm.level_list[current_level].objects[i].size))),
                        (round(lm.level_list[current_level].objects[i].x), round(lm.level_list[current_level].objects[i].y)))
+    screen.blit(lm.level_list[current_level].text, (gamedata.screen_offset[0] + 10, gamedata.screen_offset[1] - 40))
 
     clock.tick(FPS)
     pygame.display.flip()

@@ -206,24 +206,15 @@ class Goal(Tile):
         #creates an exit subclass
         super().__init__()
 
-    def detect(self, objects):
+    def next_level(self, objects):
         """
         increments current_level
         :return:
         """
         for item in objects:
-            if round(item.x) == round(self.x) and round(item.y) == round(self.y):
-                if type(item) == objectclass.Player:
-                    #create non updating versoin
-                    moves = gamedata.levelmanager.moves
-                    #reset previous level
-                    gamedata.levelmanager.level_list[gamedata.levelmanager.current_level].restart(moves)
-                    #change to the new level
-                    gamedata.levelmanager.current_level += 1
-                    #cancel all movements
-                    gamedata.levelmanager.moving_state = 0
-                    #reset move counter
-                    gamedata.levelmanager.moves = 0
+            if round(item.x) == round(self.x) and round(item.y) == round(self.y) and item.__class__ == objectclass.Player:
+                return True
+        return False
 
 class Lever(Tile):
     def __init__(self):

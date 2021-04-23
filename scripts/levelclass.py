@@ -1,10 +1,11 @@
+import pygame
 import objectclass
 import tileclass
 import gamedata
 import levelmanager
 
 class Level(object):
-    def __init__(self, size, tiles, objects, background, offsets):
+    def __init__(self, size, tiles, objects, background, text, offsets):
         """
         :param size: a grid of A x A tiles that define the level. int.
         :param tiles: the tiles that comprise the level. Array, ints.
@@ -21,6 +22,8 @@ class Level(object):
         self.offsets = offsets
         #we need to keep the moves property here in order to reset the world from other places
         self.moves = 0
+        self.text_info = pygame.font.SysFont(None, 25, False)
+        self.text = self.text_info.render(text, False, (255, 255, 255))
         # creates the grid and the lists containing the tiles and objects
 
         #turns level tile data into tiles

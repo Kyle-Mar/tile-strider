@@ -6,6 +6,8 @@ player = pygame.image.load('../images/player.png')
 crate = pygame.image.load('../images/crate.png')
 red_crate = pygame.image.load('../images/red_crate.png')
 blue_crate = pygame.image.load('../images/blue_crate.png')
+red_crate_off = pygame.image.load('../images/red_crate_off.png')
+blue_crate_off =  pygame.image.load('../images/blue_crate_off.png')
 objectset = [player, crate, red_crate, blue_crate]
 nameset = ["player", "crate", "red_crate", "blue_crate"]
 
@@ -59,8 +61,8 @@ class Object(object):
             return ValueError(f"Invalid direction: {direction}")
 
     def push(self, direction, tiles):
-        #moves an object 1/5 of the way forward (executed 5 times for smooth moving)
-        self.push_requests.append([direction, tiles * 5])
+        #adds the push request send from either the movement keys, arrows, or being pushed by another object
+        self.push_requests = [[direction, tiles * 5]]
 
     def movement_detection(self, object_list, tile_list, tile_size, grid_size, offsets, screen_size, origin_index):
         # handles movement of objects in the desired direction if possible, as well as making sure other objects are pushed
@@ -189,13 +191,17 @@ class Crate(Object):
             if red_on:
                 self.state = 1
                 self.is_anchored = False
+                self.surface = red_crate
             else:
                 self.state = 0
                 self.is_anchored = True
+                self.surface = red_crate_off
         elif self.name == "blue_crate":
             if blue_on:
                 self.state = 1
                 self.is_anchored = False
+                self.surface = blue_crate
             else:
                 self.state = 0
                 self.is_anchored = True
+                self.surface = blue_crate_off
