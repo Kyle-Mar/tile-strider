@@ -213,8 +213,10 @@ class Goal(Tile):
         """
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y) and item.__class__ == objectclass.Player:
+                pygame.mixer.music.fadeout(100)
                 return True
         return False
+
 
 class Lever(Tile):
     def __init__(self):

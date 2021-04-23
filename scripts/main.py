@@ -13,8 +13,8 @@ background = pygame.Surface(screen_size)
 start1 = pygame.image.load("../images/Start 1.png")
 start2 = pygame.image.load("../images/Start 2.png")
 menu_background = pygame.image.load("../images/Menu.png")
-#rectangle of image at position where the image will be placed
-start1Rect = start1.get_rect(center=((gamedata.resolution_x/2, gamedata.resolution_y/2)))
+# rectangle of image at position where the image will be placed
+start1Rect = start1.get_rect(center=(gamedata.resolution_x/2, gamedata.resolution_y/2))
 
 # create clock
 
@@ -34,9 +34,11 @@ lm.moving_state = 4
 running = True
 # variable to check if we should be in the menu or not
 menu = True
-pygame.mixer.music.load("../sounds/music/Menu_Song.wav")
+pygame.mixer.music.load("../music/menu.wav")
 pygame.mixer.music.play(loops=-1)
+levelchange = 0
 while running:
+
     current_level = lm.current_level
     moves = lm.moves
     # check to see if the menu has been gotten through or not
@@ -59,13 +61,13 @@ while running:
             if L:
                 menu = False
                 pygame.mixer.music.fadeout(100)
-                pygame.mixer.music.load("../sounds/music/Level_Song.wav")
-                pygame.mixer.music.play(loops=-1)
+                levelchange = 1
         clock.tick(FPS)
         pygame.display.flip()
         continue
 
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
         background.fill((lm.level_list[current_level].bg()))
@@ -83,16 +85,52 @@ while running:
         #   play level song
         # else:
         #   play menu theme
+        if levelchange == 1:
 
+            print(current_level)
+            c_l = current_level
+            for a in levels.difficultyA:
+                if a == c_l:
+                    print("a")
+                    pygame.mixer.music.load('../music/tutorial.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    levelchange = 0
+            for b in levels.difficultyB:
+                if b == c_l:
+                    print("b")
+                    pygame.mixer.music.load('../music/easylevel.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    levelchange = 0
+            for c in levels.difficultyC:
+                if c == c_l:
+                    print("c")
+                    pygame.mixer.music.load('../music/mediumlevel.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    levelchange = 0
+            for d in levels.difficultyD:
+                if d == c_l:
+                    print("d")
+                    pygame.mixer.music.load('../music/hardlevel.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    levelchange = 0
+            for e in levels.difficultyN:
+                if e == c_l:
+                    pygame.mixer.music.load('../music/menu.wav')
+                    pygame.mixer.music.play(loops=-1)
+                    levelchange = 0
+            if levelchange == 1:
+                pygame.mixer.music.load('../music/tutorial.wav')
+                pygame.mixer.music.play(loops=-1)
+                levelchange = 0
 
         # move player
 
         if event.type == pygame.KEYDOWN:
-            #exit game if esc is pressed
+            # exit game if esc is pressed
             if event.key == pygame.K_ESCAPE:
                 running = False
                 print(moves)
-            #skip the level
+            # skip the level
             if event.key == pygame.K_s:
                 lm.level_list[current_level].restart(moves)
                 for i in range(len(color_history) - 1):
@@ -102,7 +140,7 @@ while running:
                 lm.moving_state = 5
                 lm.moves = 0
                 gamedata.levelmanager.current_level += 1
-            #restart the level if r is pressed
+            # restart the level if r is pressed
             if event.key == pygame.K_r:
                 lm.level_list[current_level].restart(moves)
                 for i in range(len(color_history) - 1):
@@ -111,7 +149,7 @@ while running:
                 blue_on = color_history[-1][1]
                 lm.moving_state = 4
                 lm.moves = 0
-            #undo 1 move if u is pressed and at least 1 move has been made
+            # undo 1 move if u is pressed and at least 1 move has been made
             if event.key == pygame.K_u and moves > 0:
                 if lm.moving_state == 0:
                     lm.level_list[current_level].undo()
@@ -125,18 +163,18 @@ while running:
                     blue_on = color_history[-1][1]
                 lm.moving_state = 4
                 lm.moves -= 1
-            #make sure the player isn't moving and isn't in a pit before moving them
+            # make sure the player isn't moving and isn't in a pit before moving them
             if lm.moving_state == 0 and lm.level_list[current_level].objects[0].is_active:
-                #move the player up 1 tile if able
+                # move the player up 1 tile if able
                 if event.key == pygame.K_UP:
                     lm.level_list[current_level].objects[0].push("up", 1)
-                #move the player down 1 tile if able
+                # move the player down 1 tile if able
                 if event.key == pygame.K_DOWN:
                     lm.level_list[current_level].objects[0].push("down", 1)
-                #move the player left 1 tile if able
+                # move the player left 1 tile if able
                 if event.key == pygame.K_LEFT:
                     lm.level_list[current_level].objects[0].push("left", 1)
-                #move the player right 1 tile if able
+                # move the player right 1 tile if able
                 if event.key == pygame.K_RIGHT:
                     lm.level_list[current_level].objects[0].push("right", 1)
             if event.key == pygame.K_1 and lm.current_level != 0:
@@ -164,11 +202,11 @@ while running:
     # address interactions
 
     objects_moving = False
-    #checks which movement state the game is in (0 = nothing moving, 1 = on tiles but stuff still needs to move, 2 = currently moving,
-    #3 = checking tiles after done moving, 4 = 3 but skips setter (for the undo function), 5 = next level triggered (always goes to 4))
-    #make sure an undo wasn't requested before setting the movement state
+    # checks which movement state the game is in (0 = nothing moving, 1 = on tiles but stuff still needs to move,
+    # 2 = currently moving, 3 = checking tiles after done moving, 4 = 3 but skips setter (for the undo function),
+    # 5 = next level triggered (always goes to 4)) make sure an undo wasn't requested before setting the movement state
     if not lm.moving_state == 4:
-        #sets up for a tile action check if objects are on tiles, otherwise continues moving them
+        # sets up for a tile action check if objects are on tiles, otherwise continues moving them
         for item in lm.level_list[current_level].objects:
             if len(item.push_requests) > 0:
                 if item.push_requests[0][1] % 5 == 0:
@@ -176,14 +214,14 @@ while running:
                 else:
                     lm.moving_state = 2
                 objects_moving = True
-        #continues to the next step if nothing needs to move
+        # continues to the next step if nothing needs to move
         if not objects_moving:
             if lm.moving_state == 1:
                 lm.moving_state = 0
             elif lm.moving_state == 2:
                 lm.moving_state = 3
             elif lm.moving_state == 3:
-                #triggers the end of the turn (updates position/state histories)
+                # triggers the end of the turn (updates position/state histories)
                 for item in lm.level_list[current_level].tiles:
                     item.turn_end()
                 for item in lm.level_list[current_level].objects:
@@ -192,17 +230,19 @@ while running:
                 lm.moves += 1
                 lm.moving_state = 0
             elif lm.moving_state == 5:
+                levelchange = 1
                 lm.moving_state = 4
-    #checks if tiles that perform functions have an object on them and preforms said function if so
+
+    # checks if tiles that perform functions have an object on them and preforms said function if so
     if lm.moving_state == 1 or lm.moving_state == 3 or lm.moving_state == 4:
-        #activates levers, buttons, or rotators if something is on top of them
+        # activates levers, buttons, or rotators if something is on top of them
         for item in lm.level_list[current_level].tiles:
             if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button or item.__class__ == levels.levelclass.tileclass.Rotator:
                 if item.__class__ == levels.levelclass.tileclass.Rotator:
                     item.detect(lm.level_list[current_level].objects, lm.level_list[current_level].tiles, lm.level_list[current_level].size)
                 else:
                     item.detect(lm.level_list[current_level].objects)
-        #swaps the red and/or blue state from any lever or button interactions
+        # swaps the red and/or blue state from any lever or button interactions
         for item in lm.level_list[current_level].tiles:
             if item.__class__ == levels.levelclass.tileclass.Lever or item.__class__ == levels.levelclass.tileclass.Button:
                 if item.red_swap():
@@ -215,8 +255,8 @@ while running:
                         blue_on = False
                     else:
                         blue_on = True
-        #updates the crates and walls depending on which colors are on or off, tells objects to be pushed if they're on an arrow,
-        #and tells objects to fall if they're on a pit
+        # updates the crates and walls depending on which colors are on or off, tells objects to be pushed if
+        # they're on an arrow, and tells objects to fall if they're on a pit
         for item in lm.level_list[current_level].objects:
             if item.__class__ == levels.levelclass.objectclass.Crate:
                 item.update_state(red_on, blue_on)
@@ -240,14 +280,14 @@ while running:
                     lm.moves = 0
                     gamedata.levelmanager.current_level += 1
         if lm.moving_state == 1:
-            #triggers movement detection and execution
+            # triggers movement detection and execution
             lm.level_list[current_level].move_detection(screen_size)
             lm.level_list[current_level].move_cycle()
         if lm.moving_state == 4:
-            #ends the update chain if it was just for an undo
+            # ends the update chain if it was just for an undo
             lm.moving_state = 0
     elif lm.moving_state == 2:
-        #moves objects if they're currently in between tiles
+        # moves objects if they're currently in between tiles
         lm.level_list[current_level].move_cycle()
 
     # draw new screen
@@ -261,7 +301,7 @@ while running:
                                           (math.ceil(lm.level_list[current_level].tile_size), math.ceil(lm.level_list[current_level].tile_size))),
                    (round(lm.level_list[current_level].tiles[i].x), round(lm.level_list[current_level].tiles[i].y)))
     for i in range(len(lm.level_list[current_level].objects)):
-        #check if object is active otherwise don't render
+        # check if object is active otherwise don't render
         if lm.level_list[current_level].objects[i].is_active:
             screen.blit(pygame.transform.scale(lm.level_list[current_level].objects[i].surface,
                                               (math.ceil(lm.level_list[current_level].tile_size * lm.level_list[current_level].objects[i].size),
