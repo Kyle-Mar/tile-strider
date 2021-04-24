@@ -87,30 +87,24 @@ while running:
         # else:
         #   play menu theme
         if levelchange == 1:
-
-            print(current_level)
             c_l = current_level
             for a in levels.difficultyA:
                 if a == c_l:
-                    print("a")
                     pygame.mixer.music.load('../music/tutorial.wav')
                     pygame.mixer.music.play(loops=-1)
                     levelchange = 0
             for b in levels.difficultyB:
                 if b == c_l:
-                    print("b")
                     pygame.mixer.music.load('../music/easylevel.wav')
                     pygame.mixer.music.play(loops=-1)
                     levelchange = 0
             for c in levels.difficultyC:
                 if c == c_l:
-                    print("c")
                     pygame.mixer.music.load('../music/mediumlevel.wav')
                     pygame.mixer.music.play(loops=-1)
                     levelchange = 0
             for d in levels.difficultyD:
                 if d == c_l:
-                    print("d")
                     pygame.mixer.music.load('../music/hardlevel.wav')
                     pygame.mixer.music.play(loops=-1)
                     levelchange = 0

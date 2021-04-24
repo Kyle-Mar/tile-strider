@@ -1,5 +1,4 @@
 import pygame
-import tileclass
 
 # class for objects that sit on top of tiles like the player and crates
 player = pygame.image.load('../images/player.png')
@@ -7,7 +6,7 @@ crate = pygame.image.load('../images/crate.png')
 red_crate = pygame.image.load('../images/red_crate.png')
 blue_crate = pygame.image.load('../images/blue_crate.png')
 red_crate_off = pygame.image.load('../images/red_crate_off.png')
-blue_crate_off =  pygame.image.load('../images/blue_crate_off.png')
+blue_crate_off = pygame.image.load('../images/blue_crate_off.png')
 objectset = [player, crate, red_crate, blue_crate]
 nameset = ["player", "crate", "red_crate", "blue_crate"]
 
@@ -61,18 +60,19 @@ class Object(object):
             return ValueError(f"Invalid direction: {direction}")
 
     def push(self, direction, tiles):
-        #adds the push request send from either the movement keys, arrows, or being pushed by another object
+        # adds the push request send from either the movement keys, arrows, or being pushed by another object
         self.push_requests = [[direction, tiles * 5]]
 
     def movement_detection(self, object_list, tile_list, tile_size, grid_size, offsets, screen_size, origin_index):
-        # handles movement of objects in the desired direction if possible, as well as making sure other objects are pushed
-        # correctly and act solid if pushed against a wall
-        #makes sure the object has any push requests before doing detection
+        # handles movement of objects in the desired direction if possible,
+        # as well as making sure other objects are pushed correctly and act solid if pushed against a wall
+        # makes sure the object has any push requests before doing detection
+        condition = False
         if len(self.push_requests) > 0:
-            #checks if the object is able to move to the next tile and sets where it needs to go
+            # checks if the object is able to move to the next tile and sets where it needs to go
             x_change = 0
             y_change = 0
-            #using desired tile to make it easier to read
+            # using desired tile to make it easier to read
             future_tile = self.desired_tile(self.push_requests[0][0], offsets, tile_list, tile_size, grid_size)
             if self.push_requests[0][0] == "up":
                 condition = self.y > offsets[1] and future_tile.is_floor
@@ -87,53 +87,62 @@ class Object(object):
                 condition = self.x < ((screen_size[0] - offsets[0]) - tile_size) and future_tile.is_floor
                 x_change = tile_size
             elif self.push_requests[0][0] == "fall":
-                #ends detection if the object needs to fall into a pit since that doesn't require any detection
+                # ends detection if the object needs to fall into a pit since that doesn't require any detection
                 self.can_move = True
                 self.displacement = [tile_size / 4, tile_size / 4]
                 if not origin_index == object_list.index(self):
                     return True
                 else:
                     return
-            #checks if the object can move to the next tile and that it can be moved (the latter is only for checking if red/blue crates are off or not)
+            # checks if the object can move to the next tile and that it can be moved
+            # (the latter is only for checking if red/blue crates are off or not)
             if condition and not self.is_anchored:
-                #checks if there's any objects in the space that would be moved into and runs detection to see if they can move forward
-                #(if not, prevents the initial object from moving forward as well)
+                # checks if there's any objects in the space that would be moved into
+                # and runs detection to see if they can move forward
+                # (if not, prevents the initial object from moving forward as well)
                 for item in object_list:
-                    #checks if the new object is where the original object wants to go
-                    if round(self.x + x_change) == round(item.x) and round(self.y + y_change) == round(item.y) and item.is_active == True:
-                        #sends a push request to the new object
+                    # checks if the new object is where the original object wants to go
+                    if round(self.x + x_change) == round(item.x) and round(self.y + y_change) == round(item.y) and \
+                            item.is_active:
+                        # sends a push request to the new object
                         item.push(self.push_requests[0][0], 1)
-                        #does a detection to see if the new object is able to move forward
-                        if object_list[object_list.index(item)].movement_detection(object_list, tile_list, tile_size, grid_size, offsets, screen_size, origin_index):
-                            #allows movement for the original object if the new object can move forward
+                        # does a detection to see if the new object is able to move forward
+                        if object_list[object_list.index(item)].movement_detection(object_list, tile_list, tile_size,
+                                                                                   grid_size, offsets, screen_size,
+                                                                                   origin_index):
+                            # allows movement for the original object if the new object can move forward
                             self.can_move = True
                             self.displacement = [x_change, y_change]
-                            #if the original object isn't the object that was initially moved, it automatically returns true for the detection to save time
-                            #since it will be able to move no matter what if it made it to this point in the code (if it is the initially moved object, the function ends
+                            # if the original object isn't the object that was initially moved,
+                            # it automatically returns true for the detection to save time since it will be able to move
+                            # no matter what if it made it to this point in the code
+                            # (if it is the initially moved object, the function ends
                             if not origin_index == object_list.index(self):
                                 return True
                             else:
                                 return
                         else:
-                            #prevents movement for the original object if the new object can't move forward and deletes its push request
+                            # prevents movement for the original object
+                            # if the new object can't move forward and deletes its push request
                             self.can_move = False
                             self.push_requests.pop(0)
                             return False
-                #allows movement for the object if there's a non-wall tile with no objects on it in front of it
+                # allows movement for the object if there's a non-wall tile with no objects on it in front of it
                 self.can_move = True
                 self.displacement = [x_change, y_change]
                 return True
-            #prevents movement for the object if it either can't move to the next tile or can't be moved and deletes its push request
+            # prevents movement for the object if it either can't move to the next tile
+            # or can't be moved and deletes its push request
             else:
                 self.can_move = False
                 self.push_requests.pop(0)
                 return False
 
     def movement(self):
-        #handles the movement of an object if said object is able to move
+        # handles the movement of an object if said object is able to move
         if self.can_move:
             if self.push_requests[0][0] == "fall":
-                #handles the shrinking of objects if they fall into a pit
+                # handles the shrinking of objects if they fall into a pit
                 self.new_coords(self.x + (self.displacement[0] / (2 ** (5 - self.push_requests[0][1]))),
                                 self.y + (self.displacement[1] / (2 ** (5 - self.push_requests[0][1]))))
                 self.size *= 0.5
@@ -145,7 +154,7 @@ class Object(object):
                     self.displacement = []
                     self.push_requests.pop(0)
             else:
-                #handles the movement of objects if they go to an adjacent tile
+                # handles the movement of objects if they go to an adjacent tile
                 self.new_coords(self.x + (self.displacement[0] / 5), self.y + (self.displacement[1] / 5))
                 self.push_requests[0][1] -= 1
                 if self.push_requests[0][1] == 0:
@@ -154,7 +163,7 @@ class Object(object):
                     self.push_requests.pop(0)
 
     def back(self, back_num):
-        #reverts the object's position to a previous state in the position history
+        # reverts the object's position to a previous state in the position history
         self.new_coords(self.position_history[len(self.position_history) - back_num - 1][0],
                         self.position_history[len(self.position_history) - back_num - 1][1])
         self.state = self.state_history[len(self.state_history) - back_num - 1][0]
@@ -169,7 +178,7 @@ class Object(object):
         self.push_requests = []
 
     def turn_end(self):
-        #adds an entry to the position history list after the player moves
+        # adds an entry to the position history list after the player moves
         self.position_history.append([self.x, self.y])
         self.state_history.append([self.state, self.is_active])
 
@@ -186,7 +195,7 @@ class Crate(Object):
         super().__init__(x, y)
 
     def update_state(self, red_on, blue_on):
-        #updates how the crate behaves depending on which colors are on or off (if its color is off it can't be moved)
+        # updates how the crate behaves depending on which colors are on or off (if its color is off it can't be moved)
         if self.name == "red_crate":
             if red_on:
                 self.state = 1

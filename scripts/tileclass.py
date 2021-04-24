@@ -79,7 +79,8 @@ class Tile(object):
         elif variant == 4 or variant == 14 or variant == 15:
             self.__class__ = Button
         elif variant == 5 or variant == 16 or variant == 17:
-            #updates the visuals for the arrows based on their type and state (faster solution than to make a seperate variant for all 12 of them)
+            # updates the visuals for the arrows based on their type and state
+            # (faster solution than to make a seperate variant for all 12 of them)
             if self.name == "single_arrow":
                 strength = 0
             elif self.name == "double_arrow":
@@ -101,7 +102,7 @@ class Tile(object):
             self.__class__ = Goal
     
     def back(self, back_num):
-        #reverts the tile's state to a previous one in the state history
+        # reverts the tile's state to a previous one in the state history
         if len(self.state_history) != 0:
             self.state = self.state_history[len(self.state_history) - back_num - 1]
             if back_num > len(self.state_history):
@@ -120,7 +121,7 @@ class Tile(object):
 
     # create action funciton
     # will be overwritten in subclasses for those with actions
-    #takes object so we can determine what object is moving into the spot
+    # takes object so we can determine what object is moving into the spot
     def action(self, object):
         return  # figure out how to return a type exception
 
@@ -131,11 +132,12 @@ class Pit(Tile):
         super().__init__()
 
     def fall_objects(self, objects):
-        #makes any object on top of it fall into the pit
-        #checks if there's an object on top
+        # makes any object on top of it fall into the pit
+        # checks if there's an object on top
         for item in objects:
-            if round(item.x) == round(self.x) and round(item.y) == round(self.y) and len(item.push_requests) == 0 and item.is_active:
-                #sends falling push request
+            if round(item.x) == round(self.x) and round(item.y) == round(self.y) and len(item.push_requests) == 0 and \
+                    item.is_active:
+                # sends falling push request
                 item.push("fall", 1)
 
     def action(self, object):
@@ -143,14 +145,15 @@ class Pit(Tile):
         :return:
         """
         lm = gamedata.levelmanager
-        #if its the player restart
+        # if its the player restart
         if isinstance(object, objectclass.Player):
             lm.level_list[lm.current_level].restart(lm.level_list[lm.current_level].moves)
             lm.level_list[lm.current_level].moves = 0
-        #set object inactive otherwise
+        # set object inactive otherwise
         else:
             object.active = False
             return type(self)
+
 
 class Floor(Tile):
     def __init__(self):
@@ -174,7 +177,7 @@ class Wall(Tile):
         self.on = True
 
     def update_state(self, red_on, blue_on):
-        #updates how the wall behaves depending on which colors are on or off
+        # updates how the wall behaves depending on which colors are on or off
         if self.name == "red_block":
             if red_on:
                 self.state = 1
@@ -203,7 +206,7 @@ class Wall(Tile):
 
 class Goal(Tile):
     def __init__(self):
-        #creates an exit subclass
+        # creates an exit subclass
         super().__init__()
 
     def next_level(self, objects):
@@ -212,7 +215,8 @@ class Goal(Tile):
         :return:
         """
         for item in objects:
-            if round(item.x) == round(self.x) and round(item.y) == round(self.y) and item.__class__ == objectclass.Player:
+            if round(item.x) == round(self.x) and round(item.y) == round(self.y) and item.__class__ == \
+                    objectclass.Player:
                 pygame.mixer.music.fadeout(100)
                 pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/exit.wav"))
                 return True
@@ -225,12 +229,13 @@ class Lever(Tile):
         super().__init__()
 
     def detect(self, objects):
-        #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered)
-        #checks if an object is on top
+        # detects if an object is on top of it (0 is no object, 1 is object,
+        # 2 is object but the color swap has already been triggered)
+        # checks if an object is on top
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
-                #if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
+                # if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
                 detector = 1
                 if self.state == 0:
                     pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
@@ -239,7 +244,7 @@ class Lever(Tile):
             self.state = 0
 
     def red_swap(self):
-        #returns a boolean that will swap if red is on or off depending on if something triggered the lever
+        # returns a boolean that will swap if red is on or off depending on if something triggered the lever
         if (self.name == "red_lever" or self.name == "lever") and self.state == 1:
             if self.name == "red_lever":
                 self.state = 2
@@ -248,7 +253,7 @@ class Lever(Tile):
             return False
 
     def blue_swap(self):
-        #returns a boolean that will swap if blue is on or off depending on if something triggered the lever
+        # returns a boolean that will swap if blue is on or off depending on if something triggered the lever
         if (self.name == "blue_lever" or self.name == "lever") and self.state == 1:
             self.state = 2
             return True
@@ -262,25 +267,26 @@ class Button(Tile):
         super().__init__()
 
     def detect(self, objects):
-        #detects if an object is on top of it (0 is no object, 1 is object, 2 is object but the color swap has already been triggered,
-        #3 is no object but color swap needs to be triggered)
-        #checks if an object is on top
+        # detects if an object is on top of it (0 is no object, 1 is object,
+        # 2 is object but the color swap has already been triggered,
+        # 3 is no object but color swap needs to be triggered)
+        # checks if an object is on top
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
-                #if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
+                # if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
                 detector = 1
                 if self.state == 0:
                     pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                     self.state = 1
-        #swaps again if the object on top gets off
+        # swaps again if the object on top gets off
         if detector == 0 and self.state == 2:
             self.state = 3
         elif detector == 0:
             self.state = 0
 
     def red_swap(self):
-        #returns a boolean that will swap if red is on or off depending on if something got on or off the button
+        # returns a boolean that will swap if red is on or off depending on if something got on or off the button
         if (self.name == "red_button" or self.name == "button") and (self.state == 1 or self.state == 3):
             if self.name == "red_button":
                 if self.state == 1:
@@ -292,7 +298,7 @@ class Button(Tile):
             return False
 
     def blue_swap(self):
-        #returns a boolean that will swap if blue is on or off depending on if something got on or off the button
+        # returns a boolean that will swap if blue is on or off depending on if something got on or off the button
         if (self.name == "blue_button" or self.name == "button") and (self.state == 1 or self.state == 3):
             if self.state == 1:
                 self.state = 2
@@ -309,20 +315,22 @@ class Rotator(Tile):
         super().__init__()
 
     def detect(self, objects, tiles, grid_size):
-        #detects if an object is on top of it and changes the direction of surrounding arrows accordingly
-        #checks for objects on top
+        # detects if an object is on top of it and changes the direction of surrounding arrows accordingly
+        # checks for objects on top
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
                 detector = 1
-        #changes directions of surrounding arrows
+        # changes directions of surrounding arrows
         if detector == 1 and self.state <= 1:
             if self.state == 0:
                 self.state = 2
             elif self.state == 1:
                 self.state = 3
             for item in tiles:
-                if item.__class__ == Arrow and ((abs(tiles.index(item) - tiles.index(self)) == 1 or abs(tiles.index(item) - tiles.index(self)) == grid_size) or (self.state == 1 or self.state == 3)):
+                if item.__class__ == Arrow and ((abs(tiles.index(item) - tiles.index(self)) == 1 or
+                                                 abs(tiles.index(item) - tiles.index(self)) == grid_size) or
+                                                (self.state == 1 or self.state == 3)):
                     if self.name == "rotator":
                         pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                         item.update_direction(1)
@@ -351,7 +359,7 @@ class Arrow(Tile):
         super().__init__()
         
     def update_direction(self, change):
-        #updates the surface and direction of the arrow tile depending on the type and state
+        # updates the surface and direction of the arrow tile depending on the type and state
         self.state += change
         if self.state < 0:
             self.state += 4
@@ -366,8 +374,8 @@ class Arrow(Tile):
         self.surface = arrowset[self.state + (strength * 4)]
 
     def push_objects(self, objects):
-        #sends a push request to any objects on top of it based on its type and state
-        #changes direction of push request based on state
+        # sends a push request to any objects on top of it based on its type and state
+        # changes direction of push request based on state
         direction = ""
         if self.state == 0:
             direction = "up"
@@ -377,10 +385,10 @@ class Arrow(Tile):
             direction = "down"
         elif self.state == 3:
             direction = "left"
-        #checks for objects on top
+        # checks for objects on top
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y) and not item.is_anchored:
-                #sends push request
+                # sends push request
                 if self.name == "single_arrow":
                     item.push(direction, 1)
                 if self.name == "double_arrow":

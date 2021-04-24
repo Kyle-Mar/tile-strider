@@ -4,6 +4,7 @@ import tileclass
 import gamedata
 import levelmanager
 
+
 class Level(object):
     def __init__(self, size, tiles, objects, background, text, offsets):
         """
@@ -20,19 +21,20 @@ class Level(object):
         self.tile_size = 500 / size
         self.background = background
         self.offsets = offsets
-        #we need to keep the moves property here in order to reset the world from other places
+        # we need to keep the moves property here in order to reset the world from other places
         self.moves = 0
-        self.text_info = pygame.font.SysFont(None, 25, False)
-        self.text = self.text_info.render(text, False, (255, 255, 255))
+        self.text_info = pygame.font.SysFont('Calabri', 25, False)
+        self.text = self.text_info.render(text, True, (255, 255, 255))
         # creates the grid and the lists containing the tiles and objects
 
-        #turns level tile data into tiles
+        # turns level tile data into tiles
         for y in range(size):
             for x in range(size):
                 self.tiles.append(tileclass.Tile((x * self.tile_size) + offsets[0],
-                                                 (y * self.tile_size) + offsets[1], tiles[(y * size) + x][0], tiles[(y * size) + x][1]))
+                                                 (y * self.tile_size) + offsets[1], tiles[(y * size) + x][0],
+                                                 tiles[(y * size) + x][1]))
 
-        #turns level object data into objects
+        # turns level object data into objects
         for item in objects:
             self.objects.append(objectclass.Object(((item[0] - 1) * self.tile_size) + offsets[0],
                                                    ((item[1] - 1) * self.tile_size) + offsets[1], item[2]))
@@ -42,7 +44,6 @@ class Level(object):
         else:
             gamedata.levelmanager = levelmanager.LevelManager()
             gamedata.levelmanager.level_list.append(self)
-
 
     def undo(self):
         # triggers an undoing of the most recent move
@@ -66,12 +67,13 @@ class Level(object):
             item.back(0)
 
     def move_detection(self, screen_size):
-        #triggers detection of if objects can move or not
+        # triggers detection of if objects can move or not
         for item in self.objects:
-            item.movement_detection(self.objects, self.tiles, self.tile_size, self.size, self.offsets, screen_size, self.objects.index(item))
+            item.movement_detection(self.objects, self.tiles, self.tile_size, self.size, self.offsets, screen_size,
+                                    self.objects.index(item))
 
     def move_cycle(self):
-        #moves objects if they are able
+        # moves objects if they are able
         for item in self.objects:
             item.movement()
 
@@ -82,8 +84,7 @@ class Level(object):
     @property
     def moves(self):
         """
-        :param: a Point
-        :return int times slimed
+        :return moves
         """
         return self._moves
 
