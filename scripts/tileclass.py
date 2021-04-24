@@ -230,10 +230,10 @@ class Lever(Tile):
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
-                pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                 #if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
                 detector = 1
                 if self.state == 0:
+                    pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                     self.state = 1
         if detector == 0:
             self.state = 0
