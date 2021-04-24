@@ -61,6 +61,7 @@ while running:
             if L:
                 menu = False
                 pygame.mixer.music.fadeout(100)
+                pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                 levelchange = 1
         clock.tick(FPS)
         pygame.display.flip()

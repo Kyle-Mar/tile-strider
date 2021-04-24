@@ -214,6 +214,7 @@ class Goal(Tile):
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y) and item.__class__ == objectclass.Player:
                 pygame.mixer.music.fadeout(100)
+                pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/exit.wav"))
                 return True
         return False
 
@@ -229,6 +230,7 @@ class Lever(Tile):
         detector = 0
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y):
+                pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                 #if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
                 detector = 1
                 if self.state == 0:
@@ -269,6 +271,7 @@ class Button(Tile):
                 #if there's an object on top, make it so that a swap will be triggered with red_swap and/or blue_swap
                 detector = 1
                 if self.state == 0:
+                    pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                     self.state = 1
         #swaps again if the object on top gets off
         if detector == 0 and self.state == 2:
@@ -321,10 +324,13 @@ class Rotator(Tile):
             for item in tiles:
                 if item.__class__ == Arrow and ((abs(tiles.index(item) - tiles.index(self)) == 1 or abs(tiles.index(item) - tiles.index(self)) == grid_size) or (self.state == 1 or self.state == 3)):
                     if self.name == "rotator":
+                        pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                         item.update_direction(1)
                     elif self.name == "rotator_reverse":
+                        pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                         item.update_direction(-1)
                     elif self.name == "rotator_flip":
+                        pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                         item.update_direction(2)
         elif detector == 0 and self.state >= 2:
             if self.state == 2:
