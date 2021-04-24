@@ -1,37 +1,50 @@
+"""
+LEVEL CREATION GUIDE / MANUEL
+
+To create a level, create a new level variable with the 'levelclass.Level()' function.
+First, choose a size. All levels *are* square, void tiles are used to create different shapes.
+Tile entries go next in a square grid (in one list), then objects (in one list),
+then the background color (RGB format), then the offset (variable is named 'offset').
+For each tile entry, the first number in the list is which tile it is and the second number is its state.
+For instance, [1, 0] is a floor tile (1) in it's default (and only) state (0).
+The first object entry will be the player.
+For each object entry, the first number is the column it is in (from the left),
+the second number is the row it is in (from the top), and the third number is which object it is.
+That is, the object entry will be in the form of [X, Y, Object].
+Then add it's physical number minus 1 to your desired difficulty option (A is super easy, B is easy, C is medium,
+D is hard, and N is u*n*defined)
+
+TILE INDEX LIST
+
+~~GENERAL TILES
+    0 = Pit, 1 = Floor, 2 = Wall, 10 = Red Block, 11 = Blue Block, 9 = Void
+~~SPAWN AND GOAL TILES
+    7 = Goal, 8 = Spawn
+~~ACTIVATORS
+    3 = Lever, 12 = Red Lever, 13 = Blue Lever, 4 = Button, 14 = Red Button, 15 = Blue Button
+~~ARROWS
+    5 = Arrow, 16 = Double Arrow, 17 = Max Arrow
+        (state: 0 = up, 1 = right, 2 = down, 3 = left)
+~~ROTATORS
+    6 = Clockwise Rotator, 18 = Counterclockwise Rotator, 19 = Flip Rotator
+        (state: 0 = rotate adjacent, 1 = rotate globally)
+The only tiles that have a state other than 0 (a.k.a. default) are Arrow tiles and Rotator tiles.
+
+OBJECT INDEX LIST
+    0 = Player, 1 = Crate, 2 = Red Crate, 3 = Blue Crate
+
+//WARNING//
+
+When making a level, be sure to surround the bottom and left sides of your level with something that cannot be
+transversed, such as a wall, pit, or void tile. If you do not do this, then the player can clip Out of Bounds
+(also called O.o.B. for short) which can let them complete the level in unintentional ways in the best case or crash
+the entire game in the worst case.
+//WHEN SHARING LEVELS WITH OTHERS, BE SURE TO FOLLOW THE ABOVE WARNING!!!//
+"""
 import levelclass
 import gamedata
 
 offset = gamedata.screen_offset
-
-# LEVEL CREATION GUIDE
-# First, choose a size. All levels *are* square, void tiles are used to create different shapes.
-# Tile entries go next in a square grid (in one list), then objects (in one list),
-# then the background color (RGB format), then the offset (variable is named 'offset').
-# For each tile entry, the first number in the list is which tile it is and the second number is its state.
-# For instance, [1, 0] is a floor tile (1) in it's default (and only) state (0).
-# The first object entry will be the player.
-# For each object entry, the first number is the column it is in (from the left),
-# the second number is the row it is in (from the top), and the third number is which object it is.
-# That is, the object entry will be in the form of [X, Y, Object].
-
-# TILE INDEX LIST
-
-# ~~GENERAL TILES
-# 0 = Pit, 1 = Floor, 2 = Wall, 10 = Red Block, 11 = Blue Block, 9 = Void
-# ~~SPAWN AND GOAL TILES
-# 7 = Goal, 8 = Spawn
-# ~~ACTIVATORS
-# 3 = Lever, 12 = Red Lever, 13 = Blue Lever, 4 = Button, 14 = Red Button, 15 = Blue Button
-# ~~ARROWS
-# 5 = Arrow, 16 = Double Arrow, 17 = Max Arrow
-# (state: 0 = up, 1 = right, 2 = down, 3 = left)
-# ~~ROTATORS
-# 6 = Clockwise Rotator, 18 = Counterclockwise Rotator, 19 = Flip Rotator
-# (state: 0 = rotate adjacent, 1 = rotate globally)
-# The only tiles that have a state other than 0 (a.k.a. default) are Arrow tiles and Rotator tiles.
-
-# OBJECT INDEX LIST
-# 0 = Player, 1 = Crate, 2 = Red Crate, 3 = Blue Crate
 
 level1 = levelclass.Level(11, [[9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0],
                                [9, 0], [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [2, 0], [9, 0], [9, 0], [9, 0],
@@ -155,14 +168,15 @@ level10 = levelclass.Level(11, [[9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], 
                            [[6, 9, 0], [4, 8, 1], [6, 5, 3], [8, 4, 3]], (0, 0, 0),
                            "Level 10: Breakout Room (last level, good luck!)", offset)
 
-level11 = levelclass.Level(8, [[8, 0], [1, 0], [9, 0], [9, 0], [9, 0], [1, 0], [1, 0], [15, 0],
-                               [16, 2], [14, 0], [9, 0], [9, 0], [9, 0], [1, 0], [1, 0], [9, 0],
-                               [9, 0], [9, 0], [9, 0], [7, 0], [11, 0], [10, 0], [1, 0], [9, 0],
-                               [1, 0], [16, 0], [5, 3], [9, 0], [9, 0], [16, 2], [9, 0], [9, 0],
-                               [1, 0], [9, 0], [1, 0], [9, 0], [9, 0], [9, 0], [16, 0], [9, 0],
-                               [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0],
-                               [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0],
-                               [1, 0], [1, 0], [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [9, 0]],
+level11 = levelclass.Level(9, [[8, 0], [1, 0], [9, 0], [9, 0], [9, 0], [1, 0], [1, 0], [15, 0], [9, 0],
+                               [16, 2], [14, 0], [9, 0], [9, 0], [9, 0], [1, 0], [1, 0], [9, 0], [9, 0],
+                               [9, 0], [9, 0], [9, 0], [7, 0], [11, 0], [10, 0], [1, 0], [9, 0], [9, 0],
+                               [1, 0], [16, 0], [5, 3], [9, 0], [9, 0], [16, 2], [9, 0], [9, 0], [9, 0],
+                               [1, 0], [9, 0], [1, 0], [9, 0], [9, 0], [9, 0], [16, 0], [9, 0], [9, 0],
+                               [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0], [9, 0],
+                               [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0], [9, 0],
+                               [1, 0], [1, 0], [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [9, 0], [9, 0],
+                               [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0]],
                            [[1, 1, 0], [6, 7, 1], [5, 6, 2]],
                            (0, 0, 128), "Level 11: Did you really think it was over?", offset)
 
@@ -189,18 +203,19 @@ level12 = levelclass.Level(20, [[9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], 
                            [[19, 19, 0]],
                            (150, 30, 50), "Level 12: Ant City", offset)
 
-level13 = levelclass.Level(12, [[8, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [6, 1],
-                                [16, 0], [1, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [1, 0], [2, 0], [1, 0], [18, 1],
-                                [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [1, 0], [2, 0], [2, 0], [19, 1],
-                                [1, 0], [16, 2], [1, 0], [1, 0], [1, 0], [9, 0], [9, 0], [1, 0], [1, 0], [1, 0], [2, 0], [1, 0],
-                                [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [2, 0], [1, 0],
-                                [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [2, 0], [1, 0],
-                                [5, 0], [5, 0], [5, 1], [5, 0], [5, 1], [9, 0], [5, 0], [16, 1], [9, 0], [9, 0], [2, 0], [1, 0],
-                                [5, 0], [5, 3], [5, 0], [5, 3], [5, 0], [9, 0], [16, 0], [9, 0], [5, 0], [5, 3], [2, 0], [16, 3],
-                                [5, 3], [9, 0], [5, 0], [5, 0], [5, 1], [9, 0], [5, 3], [5, 3], [5, 3], [5, 0], [2, 0], [9, 0],
-                                [16, 0], [5, 1], [5, 1], [5, 3], [5, 0], [9, 0], [5, 3], [5, 2], [5, 1], [16, 0], [2, 0], [11, 0],
-                                [9, 0], [9, 0], [5, 1], [5, 1], [5, 0], [9, 0], [5, 3], [5, 3], [5, 3], [9, 0], [2, 0], [10, 0],
-                                [15, 0], [9, 0], [5, 1], [5, 1], [5, 1], [9, 0], [5, 0], [5, 0], [9, 0], [14, 0], [2, 0], [7, 0]],
+level13 = levelclass.Level(13, [[8, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [6, 1], [9, 0],
+                                [16, 0], [1, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [1, 0], [2, 0], [1, 0], [18, 1], [9, 0],
+                                [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [1, 0], [2, 0], [2, 0], [19, 1], [9, 0],
+                                [1, 0], [16, 2], [1, 0], [1, 0], [1, 0], [9, 0], [9, 0], [1, 0], [1, 0], [1, 0], [2, 0], [1, 0], [9, 0],
+                                [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [2, 0], [1, 0], [9, 0],
+                                [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [9, 0], [1, 0], [1, 0], [1, 0], [1, 0], [2, 0], [1, 0], [9, 0],
+                                [5, 0], [5, 0], [5, 1], [5, 0], [5, 1], [9, 0], [5, 0], [16, 1], [9, 0], [9, 0], [2, 0], [1, 0], [9, 0],
+                                [5, 0], [5, 3], [5, 0], [5, 3], [5, 0], [9, 0], [16, 0], [9, 0], [5, 0], [5, 3], [2, 0], [16, 3], [9, 0],
+                                [5, 3], [9, 0], [5, 0], [5, 0], [5, 1], [9, 0], [5, 3], [5, 3], [5, 3], [5, 0], [2, 0], [9, 0], [9, 0],
+                                [16, 0], [5, 1], [5, 1], [5, 3], [5, 0], [9, 0], [5, 3], [5, 2], [5, 1], [16, 0], [2, 0], [11, 0], [9, 0],
+                                [9, 0], [9, 0], [5, 1], [5, 1], [5, 0], [9, 0], [5, 3], [5, 3], [5, 3], [9, 0], [2, 0], [10, 0], [9, 0],
+                                [15, 0], [9, 0], [5, 1], [5, 1], [5, 1], [9, 0], [5, 0], [5, 0], [9, 0], [14, 0], [2, 0], [7, 0], [9, 0],
+                                [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0], [9, 0]],
                            [[1, 1, 0], [8, 5, 3], [2, 6, 1]],
                            (0, 200, 80), "Final Level: The Trial of the True Strider", offset)
 

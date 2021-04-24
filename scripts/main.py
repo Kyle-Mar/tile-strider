@@ -2,8 +2,8 @@ import pygame
 pygame.init()
 import gamedata
 import levels
-# do not remove ^
 import math
+# do not remove ^
 
 # initialize pygame window
 
@@ -50,13 +50,14 @@ while running:
         background.convert()
         # get mouse information
         mpos = pygame.mouse.get_pos()
-        L,R,C = pygame.mouse.get_pressed()
+        L, R, C = pygame.mouse.get_pressed()
         # draws the menu image at the middle of the screen
         screen.blit(pygame.transform.scale(menu_background, (gamedata.resolution_x, gamedata.resolution_y)), (0, 0))
         screen.blit(start1, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144, gamedata.resolution_y/2 - 144))
         # changes menu display if mouse is hovering the start text
         if start1Rect.collidepoint(mpos):
-            screen.blit(start2, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144, gamedata.resolution_y/2 - 144))
+            screen.blit(start2, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144,
+                                 gamedata.resolution_y/2 - 144))
             # checks if the left mouse button has been pressed
             if L:
                 menu = False
@@ -125,16 +126,16 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
                 print(moves)
-            # skip the level
-            if event.key == pygame.K_s:
-                lm.level_list[current_level].restart(moves)
-                for i in range(len(color_history) - 1):
-                    color_history.pop(-1)
-                red_on = color_history[-1][0]
-                blue_on = color_history[-1][1]
-                lm.moving_state = 5
-                lm.moves = 0
-                gamedata.levelmanager.current_level += 1
+            # skip the level (debug feature commented out for potential gold release)
+            # if event.key == pygame.K_s:
+                # lm.level_list[current_level].restart(moves)
+                # for i in range(len(color_history) - 1):
+                    # color_history.pop(-1)
+                # red_on = color_history[-1][0]
+                # blue_on = color_history[-1][1]
+                # lm.moving_state = 5
+                # lm.moves = 0
+                # gamedata.levelmanager.current_level += 1
             # restart the level if r is pressed
             if event.key == pygame.K_r:
                 lm.level_list[current_level].restart(moves)
@@ -172,27 +173,27 @@ while running:
                 # move the player right 1 tile if able
                 if event.key == pygame.K_RIGHT:
                     lm.level_list[current_level].objects[0].push("right", 1)
-            if event.key == pygame.K_1 and lm.current_level != 0:
-                lm.current_level = 0
-                lm.moves = 0
-            elif event.key == pygame.K_2 and lm.current_level != 1:
-                lm.current_level = 1
-                lm.moves = 0
-            elif event.key == pygame.K_3 and lm.current_level != 2:
-                lm.current_level = 2
-                lm.moves = 0
-            elif event.key == pygame.K_4 and lm.current_level != 3:
-                lm.current_level = 3
-                lm.moves = 0
-            elif event.key == pygame.K_5 and lm.current_level != 4:
-                lm.current_level = 4
-                lm.moves = 0
-            elif event.key == pygame.K_6 and lm.current_level != 5:
-                lm.current_level = 5
-                lm.moves = 0
-            elif event.key == pygame.K_7 and lm.current_level != 6:
-                lm.current_level = 6
-                lm.moves = 0
+            # if event.key == pygame.K_1 and lm.current_level != 0:
+                # lm.current_level = 0
+                # lm.moves = 0
+            # elif event.key == pygame.K_2 and lm.current_level != 1:
+                # lm.current_level = 1
+                # lm.moves = 0
+            # elif event.key == pygame.K_3 and lm.current_level != 2:
+                # lm.current_level = 2
+                # lm.moves = 0
+            # elif event.key == pygame.K_4 and lm.current_level != 3:
+                # lm.current_level = 3
+                # lm.moves = 0
+            # elif event.key == pygame.K_5 and lm.current_level != 4:
+                # lm.current_level = 4
+                # lm.moves = 0
+            # elif event.key == pygame.K_6 and lm.current_level != 5:
+                # lm.current_level = 5
+                # lm.moves = 0
+            # elif event.key == pygame.K_7 and lm.current_level != 6:
+                # lm.current_level = 6
+                # lm.moves = 0
         
     # address interactions
 
