@@ -15,12 +15,14 @@ start2 = pygame.image.load("../images/Start 2.png")
 credits1 = pygame.image.load('../images/Credits 1.png')
 credits2 = pygame.image.load('../images/Credits 2.png')
 menu_background = pygame.image.load("../images/Menu.png")
+icon = pygame.image.load("../images/player.png")
 # rectangle of image at position where the image will be placed
 start1Rect = start1.get_rect(center=(gamedata.resolution_x - gamedata.resolution_x / 3 - 60,
                                      gamedata.resolution_y/2 - 125))
 credits1Rect = credits1.get_rect(center=(gamedata.resolution_x - gamedata.resolution_x / 3 - 60,
                                          gamedata.resolution_y - gamedata.resolution_y/4 + 30))
-
+pygame.display.set_caption('Tile Strider')
+pygame.display.set_icon(icon)
 # create clock
 
 clock = pygame.time.Clock()
@@ -47,7 +49,7 @@ credits = False
 pygame.mixer.music.load("../music/menu.wav")
 freshmenu = 1
 text_style = pygame.font.SysFont('Calabri', 25, False)
-version_info = text_style.render("Version 1.0.1", True, (0, 0, 0))
+version_info = text_style.render("Version 1.0.2", True, (0, 0, 0))
 while running:
 
     if menu == False:
