@@ -12,9 +12,14 @@ screen = pygame.display.set_mode(screen_size)
 background = pygame.Surface(screen_size)
 start1 = pygame.image.load("../images/Start 1.png")
 start2 = pygame.image.load("../images/Start 2.png")
+credits1 = pygame.image.load('../images/Credits 1.png')
+credits2 = pygame.image.load('../images/Credits 2.png')
 menu_background = pygame.image.load("../images/Menu.png")
 # rectangle of image at position where the image will be placed
-start1Rect = start1.get_rect(center=(gamedata.resolution_x/2, gamedata.resolution_y/2))
+start1Rect = start1.get_rect(center=(gamedata.resolution_x - gamedata.resolution_x / 3 - 60,
+                                     gamedata.resolution_y/2 - 125))
+credits1Rect = credits1.get_rect(center=(gamedata.resolution_x - gamedata.resolution_x / 3 - 60,
+                                         gamedata.resolution_y - gamedata.resolution_y/4 + 30))
 
 # create clock
 
@@ -38,14 +43,21 @@ timer = 0
 running = True
 # variable to check if we should be in the menu or not
 menu = True
+credits = False
 pygame.mixer.music.load("../music/menu.wav")
-pygame.mixer.music.play(loops=-1)
+freshmenu = 1
 while running:
 
+    if menu == False:
+        freshmenu = 1
     current_level = lm.current_level
     moves = lm.moves
+
     # check to see if the menu has been gotten through or not
     if menu:
+        if freshmenu == 1:
+            pygame.mixer.music.play(loops=-1)
+            freshmenu = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -57,6 +69,7 @@ while running:
         # draws the menu image at the middle of the screen
         screen.blit(pygame.transform.scale(menu_background, (gamedata.resolution_x, gamedata.resolution_y)), (0, 0))
         screen.blit(start1, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144, gamedata.resolution_y/2 - 144))
+        screen.blit(credits1, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144, gamedata.resolution_y / 2 - 75))
         # changes menu display if mouse is hovering the start text
         if start1Rect.collidepoint(mpos):
             screen.blit(start2, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144,
@@ -67,28 +80,68 @@ while running:
                 pygame.mixer.music.fadeout(100)
                 pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
                 music_playing = False
+        if credits1Rect.collidepoint(mpos):
+            screen.blit(credits2, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144,
+                                   gamedata.resolution_y / 2 - 75))
+            # checks if the left mouse button has been pressed
+            if L:
+                menu = False
+                pygame.mixer.Sound.play(pygame.mixer.Sound("../sounds/effects/click.wav"))
+                credits = True
         clock.tick(FPS)
         pygame.display.flip()
         continue
 
+    scrolling = True
+    countdown = True
+
+    if credits:
+        lm.moving_state = 0
+        moves = 0
+        pygame.mixer.music.fadeout(100)
+        pygame.mixer.music.load("../music/menu.wav")
+        pygame.mixer.music.play(loops=-1)
+        background.fill((lm.level_list[current_level].bg()))
+        background.convert()
+        creditsbg = pygame.image.load('../Credits.jpg')
+        endcredits = pygame.image.load('../Credits Names.png')
+        screen.blit(pygame.transform.scale(creditsbg, (gamedata.resolution_x, gamedata.resolution_y)), (0, 0))
+        ctimer = 0
+        creditspos = gamedata.resolution_y + 50
+        while scrolling:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            screen.blit(pygame.transform.scale(creditsbg, (gamedata.resolution_x, gamedata.resolution_y)), (0, 0))
+            screen.blit(pygame.transform.scale(endcredits, (gamedata.resolution_x, 3000)), (0, creditspos))
+            if creditspos <= -3000 + (gamedata.resolution_y / 4) * 3:
+                scrolling = False
+            else:
+                creditspos -= 3
+            pygame.display.flip()
+        while countdown:
+            pygame.mixer.music.fadeout(2000)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            if ctimer == 100:
+                lm.current_level = 0
+                ctimer = 0
+                menu = True
+                credits = False
+                countdown = False
+            else:
+                ctimer += 1
+            clock.tick(FPS)
+            pygame.display.flip()
+        clock.tick(FPS)
+        pygame.display.flip()
+        continue
     move_requested = False
 
     background.fill((lm.level_list[current_level].bg()))
     background.convert()
 
-    # note: these "code snippets" aren't really code, but rather what these blocks should end up doing in general
-
-    # if current_level == none:
-    #  display main menu
-    # else:
-    # load level
-
-    # music stuff is going to go here
-    # if current level == levels.levelX (where X is a level):
-    #   play level song
-    # else:
-    #   play menu theme
-        
     if not music_playing:
         c_l = current_level
         for a in levels.difficultyA:
@@ -125,6 +178,10 @@ while running:
 
         if event.type == pygame.QUIT:
             running = False
+
+        # credits
+        if lm.current_level == 15:
+            credits = True
 
         # move player
 
@@ -184,9 +241,9 @@ while running:
                 if event.key == pygame.K_RIGHT:
                     lm.level_list[current_level].objects[0].push("right", 1)
                     move_requested = True
-            # if event.key == pygame.K_1 and lm.current_level != 0:
-                # lm.current_level = 0
-                # lm.moves = 0
+            if event.key == pygame.K_1 and lm.current_level == 0:
+                lm.current_level = 14
+                lm.moves = 0
             # elif event.key == pygame.K_2 and lm.current_level != 1:
                 # lm.current_level = 1
                 # lm.moves = 0
@@ -301,7 +358,7 @@ while running:
             lm.level_list[current_level].move_cycle()
     else:
         timer += 1
-        if timer == 5:
+        if timer == 2:
             timer = 0
             lm.moving_state = 5
             lm.moves = 0
