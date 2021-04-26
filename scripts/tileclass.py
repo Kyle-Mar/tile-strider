@@ -373,7 +373,7 @@ class Arrow(Tile):
             strength = 2
         self.surface = arrowset[self.state + (strength * 4)]
 
-    def push_objects(self, objects):
+    def push_objects(self, objects, move_requested):
         # sends a push request to any objects on top of it based on its type and state
         # changes direction of push request based on state
         direction = ""
@@ -388,13 +388,14 @@ class Arrow(Tile):
         # checks for objects on top
         for item in objects:
             if round(item.x) == round(self.x) and round(item.y) == round(self.y) and not item.is_anchored:
-                # sends push request
-                if self.name == "single_arrow":
-                    item.push(direction, 1)
-                if self.name == "double_arrow":
-                    item.push(direction, 2)
-                if self.name == "max_arrow":
-                    item.push(direction, 20)
+                # sends push request if the object can move
+                if not move_requested:
+                    if self.name == "single_arrow":
+                        item.push(direction, 1)
+                    if self.name == "double_arrow":
+                        item.push(direction, 2)
+                    if self.name == "max_arrow":
+                        item.push(direction, 20)
 
     def action(self):
         """

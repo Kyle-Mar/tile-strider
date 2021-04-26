@@ -69,8 +69,7 @@ class Level(object):
     def move_detection(self, screen_size):
         # triggers detection of if objects can move or not
         for item in self.objects:
-            item.movement_detection(self.objects, self.tiles, self.tile_size, self.size, self.offsets, screen_size,
-                                    self.objects.index(item))
+            item.movement_detection(self.objects, self.tiles, self.tile_size, self.size, self.offsets, screen_size)
 
     def move_cycle(self):
         # moves objects if they are able

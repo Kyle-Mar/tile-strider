@@ -63,7 +63,7 @@ class Object(object):
         # adds the push request send from either the movement keys, arrows, or being pushed by another object
         self.push_requests = [[direction, tiles * 5]]
 
-    def movement_detection(self, object_list, tile_list, tile_size, grid_size, offsets, screen_size, origin_index):
+    def movement_detection(self, object_list, tile_list, tile_size, grid_size, offsets, screen_size):
         # handles movement of objects in the desired direction if possible,
         # as well as making sure other objects are pushed correctly and act solid if pushed against a wall
         # makes sure the object has any push requests before doing detection
@@ -90,10 +90,7 @@ class Object(object):
                 # ends detection if the object needs to fall into a pit since that doesn't require any detection
                 self.can_move = True
                 self.displacement = [tile_size / 4, tile_size / 4]
-                if not origin_index == object_list.index(self):
-                    return True
-                else:
-                    return
+                return True
             # checks if the object can move to the next tile and that it can be moved
             # (the latter is only for checking if red/blue crates are off or not)
             if condition and not self.is_anchored:
@@ -108,19 +105,13 @@ class Object(object):
                         item.push(self.push_requests[0][0], 1)
                         # does a detection to see if the new object is able to move forward
                         if object_list[object_list.index(item)].movement_detection(object_list, tile_list, tile_size,
-                                                                                   grid_size, offsets, screen_size,
-                                                                                   origin_index):
+                                                                                   grid_size, offsets, screen_size):
                             # allows movement for the original object if the new object can move forward
                             self.can_move = True
                             self.displacement = [x_change, y_change]
-                            # if the original object isn't the object that was initially moved,
-                            # it automatically returns true for the detection to save time since it will be able to move
-                            # no matter what if it made it to this point in the code
-                            # (if it is the initially moved object, the function ends
-                            if not origin_index == object_list.index(self):
-                                return True
-                            else:
-                                return
+                            # the object automatically returns true for the detection to save time since it will
+                            # be able to move no matter what if it made it to this point in the code
+                            return True
                         else:
                             # prevents movement for the original object
                             # if the new object can't move forward and deletes its push request
