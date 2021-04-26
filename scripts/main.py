@@ -46,6 +46,8 @@ menu = True
 credits = False
 pygame.mixer.music.load("../music/menu.wav")
 freshmenu = 1
+text_style = pygame.font.SysFont('Calabri', 25, False)
+version_info = text_style.render("Version 1.0.1", True, (0, 0, 0))
 while running:
 
     if menu == False:
@@ -70,6 +72,7 @@ while running:
         screen.blit(pygame.transform.scale(menu_background, (gamedata.resolution_x, gamedata.resolution_y)), (0, 0))
         screen.blit(start1, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144, gamedata.resolution_y/2 - 144))
         screen.blit(credits1, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144, gamedata.resolution_y / 2 - 75))
+        screen.blit(version_info, (25, (gamedata.resolution_y / 8) * 7))
         # changes menu display if mouse is hovering the start text
         if start1Rect.collidepoint(mpos):
             screen.blit(start2, (gamedata.resolution_x - gamedata.resolution_x / 3 - 144,
